@@ -1,0 +1,6 @@
+[wrap-git]
+url         = git@github.com:pacce/rapidcheck.git
+revision    = head
+
+[provide]
+rapidcheck  = rapidcheck_dep

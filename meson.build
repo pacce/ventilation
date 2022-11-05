@@ -15,4 +15,5 @@ ventilation_dep = declare_dependency(link_with: ventilation, include_directories
 
 if not meson.is_subproject()
   subdir('example')
+  subdir('tests')
 endif
