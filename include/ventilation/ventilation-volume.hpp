@@ -9,8 +9,8 @@ namespace ventilation {
     class Volume {
         static_assert(std::is_floating_point<Precision>::value);
         public:
-            Volume() : Volume(Precision()) {}
-            Volume(Precision value) : value_(value) {}
+            explicit Volume() : Volume(Precision()) {}
+            explicit Volume(Precision value) : value_(value) {}
 
             friend std::ostream&
             operator<<(std::ostream& os, const Volume& p) {

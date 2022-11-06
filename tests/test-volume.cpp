@@ -61,12 +61,12 @@ RC_GTEST_PROP(MulScalar, Commutativef32, (const V32& xs)) {
 
 RC_GTEST_PROP(MulScalar, Neutralf32, (const V32& xs)) {
     float ys = 1.0f;
-    RC_ASSERT((xs * ys) == xs);
+    RC_ASSERT((xs * ys) == V32(xs));
 }
 
 RC_GTEST_PROP(MulScalar, Zerof32, (const V32& xs)) {
     float ys = 0.0f;
-    RC_ASSERT((xs * ys) == ys);
+    RC_ASSERT((xs * ys) == V32(ys));
 }
 
 // Tests double precision pressure implementation
@@ -114,12 +114,12 @@ RC_GTEST_PROP(MulScalar, Commutativef64, (const V64& xs)) {
 
 RC_GTEST_PROP(MulScalar, Neutralf64, (const V64& xs)) {
     double ys = 1.0;
-    RC_ASSERT((xs * ys) == xs);
+    RC_ASSERT((xs * ys) == V64(xs));
 }
 
 RC_GTEST_PROP(MulScalar, Zerof64, (const V64& xs)) {
     double ys = 0.0;
-    RC_ASSERT((xs * ys) == ys);
+    RC_ASSERT((xs * ys) == V64(ys));
 }
 
 int
