@@ -9,7 +9,8 @@ namespace ventilation {
     class Flow {
         static_assert(std::is_floating_point<Precision>::value);
         public:
-            Flow(Precision value) : value_(value) {}
+            explicit Flow() : Flow(Precision()) {}
+            explicit Flow(Precision value) : value_(value) {}
 
             friend std::ostream&
             operator<<(std::ostream& os, const Flow& p) {
