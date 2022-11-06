@@ -9,6 +9,7 @@ namespace ventilation {
     class Volume {
         static_assert(std::is_floating_point<Precision>::value);
         public:
+            Volume() : Volume(Precision()) {}
             Volume(Precision value) : value_(value) {}
 
             friend std::ostream&
@@ -37,6 +38,12 @@ namespace ventilation {
             }
 
             Volume<Precision>&
+            operator*=(const Precision& rhs) {
+                value_ *= rhs;
+                return *this;
+            }
+
+            Volume<Precision>&
             operator*=(const Volume<Precision>& rhs) {
                 value_ *= rhs.value_;
                 return *this;
@@ -55,6 +62,16 @@ namespace ventilation {
             friend Volume<Precision>
             operator*(const Volume<Precision>& lhs, const Volume<Precision>& rhs) {
                 return Volume<Precision>(lhs.value_ * rhs.value_);
+            }
+
+            friend Volume<Precision>
+            operator*(const Volume<Precision>& lhs, const Precision& rhs) {
+                return Volume<Precision>(lhs.value_ * rhs);
+            }
+
+            friend Volume<Precision>
+            operator*(const Precision& lhs, const Volume<Precision>& rhs) {
+                return Volume<Precision>(lhs * rhs.value_);
             }
 
             friend bool
