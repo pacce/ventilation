@@ -1,13 +1,10 @@
 #ifndef VENTILATION_CONTROL_HPP__
 #define VENTILATION_CONTROL_HPP__
 
-// #include "ventilation-compliance.hpp"
-// #include "ventilation-elastance.hpp"
-// #include "ventilation-resistance.hpp"
-
 #include "ventilation-flow.hpp"
 #include "ventilation-pressure.hpp"
 #include "ventilation-volume.hpp"
+#include "ventilation-traits.hpp"
 
 namespace ventilation {
 namespace control {
@@ -66,6 +63,7 @@ namespace control {
 
     template <typename Precision, template <typename> typename Target>
     class Proportional {
+        static_assert(is_airway_type<Target<Precision>>::value);
         public:
             Proportional(const Gain<Precision>& gain, const Target<Precision>& target)
                 : gain_(gain)
