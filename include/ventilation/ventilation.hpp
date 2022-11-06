@@ -8,4 +8,6 @@
 #include "ventilation-resistance.hpp"
 #include "ventilation-volume.hpp"
 
+#include "ventilation-integration.hpp"
+
 #endif // VENTILATION_HPP__
