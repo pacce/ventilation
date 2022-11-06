@@ -8,6 +8,7 @@
 #include "ventilation-resistance.hpp"
 #include "ventilation-volume.hpp"
 
+#include "ventilation-control.hpp"
 #include "ventilation-integration.hpp"
 #include "ventilation-lung.hpp"
 
