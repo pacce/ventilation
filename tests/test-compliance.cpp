@@ -2,21 +2,12 @@
 #include <rapidcheck/gtest.h>
 #include <ventilation/ventilation.hpp>
 
+#include "test-arbitrary.hpp"
+
 using ventilation::Compliance;
 using C32 = Compliance<float>;
 using C64 = Compliance<double>;
 
-namespace rc {
-template<typename Precision>
-struct Arbitrary<Compliance<Precision>> {
-    static Gen<Compliance<Precision>>
-    arbitrary() {
-        return gen::construct<Compliance<Precision>>(
-                gen::cast<Precision>(gen::inRange(-100, 100))
-                );
-    }
-};
-} // namespace rc
 
 RC_GTEST_PROP(Add, Associativef32, (const C32& xs, const C32& ys, const C32& zs)) {
     RC_ASSERT(((xs + ys) + zs) == (xs + ys + zs));

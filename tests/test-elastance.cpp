@@ -2,21 +2,12 @@
 #include <rapidcheck/gtest.h>
 #include <ventilation/ventilation.hpp>
 
+#include "test-arbitrary.hpp"
+
 using ventilation::Elastance;
 using E32 = Elastance<float>;
 using E64 = Elastance<double>;
 
-namespace rc {
-template<typename Precision>
-struct Arbitrary<Elastance<Precision>> {
-    static Gen<Elastance<Precision>>
-    arbitrary() {
-        return gen::construct<Elastance<Precision>>(
-                gen::cast<Precision>(gen::inRange(-100, 100))
-                );
-    }
-};
-} // namespace rc
 
 RC_GTEST_PROP(Add, Associativef32, (const E32& xs, const E32& ys, const E32& zs)) {
     RC_ASSERT(((xs + ys) + zs) == (xs + ys + zs));

@@ -2,21 +2,11 @@
 #include <rapidcheck/gtest.h>
 #include <ventilation/ventilation.hpp>
 
+#include "test-arbitrary.hpp"
+
 using ventilation::Volume;
 using V32 = Volume<float>;
 using V64 = Volume<double>;
-
-namespace rc {
-template<typename Precision>
-struct Arbitrary<Volume<Precision>> {
-    static Gen<Volume<Precision>>
-    arbitrary() {
-        return gen::construct<Volume<Precision>>(
-                gen::cast<Precision>(gen::inRange(-100, 100))
-                );
-    }
-};
-} // namespace rc
 
 RC_GTEST_PROP(Add, Associativef32, (const V32& xs, const V32& ys, const V32& zs)) {
     RC_ASSERT(((xs + ys) + zs) == (xs + ys + zs));

@@ -2,21 +2,11 @@
 #include <rapidcheck/gtest.h>
 #include <ventilation/ventilation.hpp>
 
+#include "test-arbitrary.hpp"
+
 using ventilation::Flow;
 using F32 = Flow<float>;
 using F64 = Flow<double>;
-
-namespace rc {
-template<typename Precision>
-struct Arbitrary<Flow<Precision>> {
-    static Gen<Flow<Precision>>
-    arbitrary() {
-        return gen::construct<Flow<Precision>>(
-                gen::cast<Precision>(gen::inRange(-100, 100))
-                );
-    }
-};
-} // namespace rc
 
 RC_GTEST_PROP(Add, Associativef32, (const F32& xs, const F32& ys, const F32& zs)) {
     RC_ASSERT(((xs + ys) + zs) == (xs + ys + zs));

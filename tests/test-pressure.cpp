@@ -2,21 +2,11 @@
 #include <rapidcheck/gtest.h>
 #include <ventilation/ventilation.hpp>
 
+#include "test-arbitrary.hpp"
+
 using ventilation::Pressure;
 using P32 = Pressure<float>;
 using P64 = Pressure<double>;
-
-namespace rc {
-template<typename Precision>
-struct Arbitrary<Pressure<Precision>> {
-    static Gen<Pressure<Precision>>
-    arbitrary() {
-        return gen::construct<Pressure<Precision>>(
-                gen::cast<Precision>(gen::inRange(-100, 100))
-                );
-    }
-};
-} // namespace rc
 
 RC_GTEST_PROP(Add, Associativef32, (const P32& xs, const P32& ys, const P32& zs)) {
     RC_ASSERT(((xs + ys) + zs) == (xs + ys + zs));
