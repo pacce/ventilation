@@ -4,12 +4,16 @@
 #include <iomanip>
 #include <ostream>
 
+#include "ventilation-pressure.hpp"
+#include "ventilation-volume.hpp"
+
 namespace ventilation {
     template <typename Precision>
     class Elastance {
         static_assert(std::is_floating_point<Precision>::value);
         public:
-            Elastance(Precision value) : value_(value) {}
+            explicit Elastance() : Elastance(Precision()) {}
+            explicit Elastance(Precision value) : value_(value) {}
 
             friend std::ostream&
             operator<<(std::ostream& os, const Elastance& p) {
@@ -55,6 +59,26 @@ namespace ventilation {
             friend Elastance<Precision>
             operator*(const Elastance<Precision>& lhs, const Elastance<Precision>& rhs) {
                 return Elastance<Precision>(lhs.value_ * rhs.value_);
+            }
+
+            friend Elastance<Precision>
+            operator*(const Elastance<Precision>& lhs, const Precision& rhs) {
+                return Elastance<Precision>(lhs.value_ * rhs);
+            }
+
+            friend Elastance<Precision>
+            operator*(const Precision& lhs, const Elastance<Precision>& rhs) {
+                return Elastance<Precision>(lhs * rhs.value_);
+            }
+
+            friend Pressure<Precision>
+            operator*(const Elastance<Precision>& lhs, const Volume<Precision>& rhs) {
+                return Pressure<Precision>(lhs.value_ * static_cast<Precision>(rhs));
+            }
+
+            friend Pressure<Precision>
+            operator*(const Volume<Precision>& lhs, const Elastance<Precision>& rhs) {
+                return Pressure<Precision>(static_cast<Precision>(lhs) * rhs.value_);
             }
 
             friend bool

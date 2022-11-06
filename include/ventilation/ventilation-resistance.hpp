@@ -4,6 +4,9 @@
 #include <iomanip>
 #include <ostream>
 
+#include "ventilation-flow.hpp"
+#include "ventilation-pressure.hpp"
+
 namespace ventilation {
     template <typename Precision>
     class Resistance {
@@ -66,6 +69,16 @@ namespace ventilation {
             friend Resistance<Precision>
             operator*(const Precision& lhs, const Resistance<Precision>& rhs) {
                 return Resistance<Precision>(lhs * rhs.value_);
+            }
+
+            friend Pressure<Precision>
+            operator*(const Resistance<Precision>& lhs, const Flow<Precision>& rhs) {
+                return Pressure<Precision>(lhs.value_ * static_cast<Precision>(rhs));
+            }
+
+            friend Pressure<Precision>
+            operator*(const Flow<Precision>& lhs, const Resistance<Precision>& rhs) {
+                return Pressure<Precision>(static_cast<Precision>(lhs) * rhs.value_);
             }
 
             friend bool
