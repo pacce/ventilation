@@ -9,7 +9,8 @@ namespace ventilation {
     class Pressure {
         static_assert(std::is_floating_point<Precision>::value);
         public:
-            Pressure(Precision value) : value_(value) {}
+            explicit Pressure() : Pressure(Precision()) {}
+            explicit Pressure(Precision value) : value_(value) {}
 
             friend std::ostream&
             operator<<(std::ostream& os, const Pressure& p) {
@@ -55,6 +56,16 @@ namespace ventilation {
             friend Pressure<Precision>
             operator*(const Pressure<Precision>& lhs, const Pressure<Precision>& rhs) {
                 return Pressure<Precision>(lhs.value_ * rhs.value_);
+            }
+
+            friend Pressure<Precision>
+            operator*(const Pressure<Precision>& lhs, const Precision& rhs) {
+                return Pressure<Precision>(lhs.value_ * rhs);
+            }
+
+            friend Pressure<Precision>
+            operator*(const Precision& lhs, const Pressure<Precision>& rhs) {
+                return Pressure<Precision>(lhs * rhs.value_);
             }
 
             friend bool
