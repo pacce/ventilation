@@ -6,10 +6,12 @@ compliance  = executable('test-compliance', 'test-compliance.cpp', dependencies:
 elastance   = executable( 'test-elastance',  'test-elastance.cpp', dependencies: dependencies)
 flow        = executable(      'test-flow',       'test-flow.cpp', dependencies: dependencies)
 pressure    = executable(  'test-pressure',   'test-pressure.cpp', dependencies: dependencies)
+resistance  = executable('test-resistance', 'test-resistance.cpp', dependencies: dependencies)
 volume      = executable(    'test-volume',     'test-volume.cpp', dependencies: dependencies)
 
 test('test-compliance', compliance)
 test( 'test-elastance',  elastance)
 test(      'test-flow',       flow)
 test(  'test-pressure',   pressure)
+test('test-resistance', resistance)
 test(    'test-volume',     volume)

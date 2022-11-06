@@ -5,6 +5,7 @@
 #include "ventilation-elastance.hpp"
 #include "ventilation-flow.hpp"
 #include "ventilation-pressure.hpp"
+#include "ventilation-resistance.hpp"
 #include "ventilation-volume.hpp"
 
 #endif // VENTILATION_HPP__
