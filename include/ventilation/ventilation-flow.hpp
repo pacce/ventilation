@@ -57,6 +57,16 @@ namespace ventilation {
                 return Flow<Precision>(lhs.value_ * rhs.value_);
             }
 
+            friend Flow<Precision>
+            operator*(const Flow<Precision>& lhs, const Precision& rhs) {
+                return Flow<Precision>(lhs.value_ * rhs);
+            }
+
+            friend Flow<Precision>
+            operator*(const Precision& lhs, const Flow<Precision>& rhs) {
+                return Flow<Precision>(lhs * rhs.value_);
+            }
+
             friend bool
             operator==(const Flow<Precision>& lhs, const Flow<Precision>& rhs) {
                 const double DBL_TOLERANCE = 0.1;
