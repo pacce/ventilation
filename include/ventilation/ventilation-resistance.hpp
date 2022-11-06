@@ -9,7 +9,8 @@ namespace ventilation {
     class Resistance {
         static_assert(std::is_floating_point<Precision>::value);
         public:
-            Resistance(Precision value) : value_(value) {}
+            explicit Resistance() : Resistance(Precision()) {}
+            explicit Resistance(Precision value) : value_(value) {}
 
             friend std::ostream&
             operator<<(std::ostream& os, const Resistance& p) {
@@ -55,6 +56,16 @@ namespace ventilation {
             friend Resistance<Precision>
             operator*(const Resistance<Precision>& lhs, const Resistance<Precision>& rhs) {
                 return Resistance<Precision>(lhs.value_ * rhs.value_);
+            }
+
+            friend Resistance<Precision>
+            operator*(const Resistance<Precision>& lhs, const Precision& rhs) {
+                return Resistance<Precision>(lhs.value_ * rhs);
+            }
+
+            friend Resistance<Precision>
+            operator*(const Precision& lhs, const Resistance<Precision>& rhs) {
+                return Resistance<Precision>(lhs * rhs.value_);
             }
 
             friend bool

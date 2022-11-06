@@ -92,6 +92,21 @@ RC_GTEST_PROP(Mul, Zerof64, (const R64& xs)) {
     RC_ASSERT((xs * ys) == ys);
 }
 
+RC_GTEST_PROP(MulScalar, Commutativef64, (const R64& xs)) {
+    double ys = *rc::gen::inRange(-100, 100);
+    RC_ASSERT((xs * ys) == (ys * xs));
+}
+
+RC_GTEST_PROP(MulScalar, Neutralf64, (const R64& xs)) {
+    double ys = 1.0;
+    RC_ASSERT((xs * ys) == R64(xs));
+}
+
+RC_GTEST_PROP(MulScalar, Zerof64, (const R64& xs)) {
+    double ys = 0.0;
+    RC_ASSERT((xs * ys) == R64(ys));
+}
+
 int
 main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
