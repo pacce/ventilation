@@ -17,19 +17,23 @@ main(int argc, char** argv) {
     ventilation::control::Gain<float>   gain(0.001);
     ventilation::control::Proportional  control(gain, target);
 
-    for (std::size_t i = 0; i < 2000; i++) {
-        std::cout << p << ", " << 60.0 * f << ", " << 1000.0 * v << std::endl;
+    ventilation::cycle::Cycle cycle(
+              std::chrono::duration<float>(0.1f)
+            , std::chrono::duration<float>(0.9f)
+            );
 
-        if ((i % 1000) == 0) {
-            target  = ventilation::Pressure<float>(20.0);
-            control = ventilation::control::Proportional(gain, target);
-        } else if ((i % 1000) == 100) {
-            target  = ventilation::Pressure<float>(0.0);
-            control = ventilation::control::Proportional(gain, target);
+    for (std::size_t i = 0; i < 20000; i++) {
+        std::cout << p << ", " << 60.0 * f << ", " << 1000.0 * v << std::endl;
+        switch(cycle(step)) {
+            case ventilation::cycle::State::INSPIRATION:
+            { target = ventilation::Pressure<float>(20.0); break; }
+            case ventilation::cycle::State::EXPIRATION:
+            { target = ventilation::Pressure<float>( 5.0); break; }
         }
-        f = control(p);
-        v += ventilation::integration::square(1000.0 * f, step);
-        p = lung.forward(f, v);
+        control = ventilation::control::Proportional(gain, target);
+        f       = control(p);
+        v       += ventilation::integration::square(1000.0 * f, step);
+        p       = lung.forward(f, v);
     }
     exit(EXIT_SUCCESS);
 }

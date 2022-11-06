@@ -9,6 +9,7 @@ integration = executable('test-integration', 'test-integration.cpp', dependencie
 lung        = executable(       'test-lung',        'test-lung.cpp', dependencies: dependencies)
 pressure    = executable(   'test-pressure',    'test-pressure.cpp', dependencies: dependencies)
 resistance  = executable( 'test-resistance',  'test-resistance.cpp', dependencies: dependencies)
+traits      = executable(     'test-traits',      'test-traits.cpp', dependencies: dependencies)
 volume      = executable(     'test-volume',      'test-volume.cpp', dependencies: dependencies)
 
 test( 'test-compliance',  compliance)
@@ -18,4 +19,5 @@ test('test-integration', integration)
 test(       'test-lung',        lung)
 test(   'test-pressure',    pressure)
 test( 'test-resistance',  resistance)
+test(     'test-traits',      traits)
 test(     'test-volume',      volume)
