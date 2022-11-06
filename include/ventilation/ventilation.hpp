@@ -9,5 +9,6 @@
 #include "ventilation-volume.hpp"
 
 #include "ventilation-integration.hpp"
+#include "ventilation-lung.hpp"
 
 #endif // VENTILATION_HPP__

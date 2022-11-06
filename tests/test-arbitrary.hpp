@@ -64,6 +64,17 @@ struct Arbitrary<ventilation::Volume<Precision>> {
                 );
     }
 };
+
+template<typename Precision>
+struct Arbitrary<ventilation::Lung<Precision>> {
+    static Gen<ventilation::Lung<Precision>>
+    arbitrary() {
+        return gen::construct<ventilation::Lung<Precision>>(
+                  gen::arbitrary<ventilation::Resistance<Precision>>()
+                , gen::arbitrary<ventilation::Elastance<Precision>>()
+                );
+    }
+};
 } // namespace rc
 
 #endif // TEST_ARBITRARY_HPP__
