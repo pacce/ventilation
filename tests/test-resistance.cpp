@@ -63,8 +63,19 @@ RC_GTEST_PROP(MulVolume, Zerof32, (const R32& xs)) {
     RC_ASSERT((xs * ys) == P32(0.0f));
 }
 
-// Tests double precision pressure implementation
+RC_GTEST_PROP(Comparison, Greaterf32, (const R32& xs)) {
+    R32 ys(1.0f);
+    RC_ASSERT((xs + ys) > xs);
+    RC_ASSERT((xs + ys) >= xs);
+}
 
+RC_GTEST_PROP(Comparison, Lesserf32, (const R32& xs)) {
+    R32 ys(1.0f);
+    RC_ASSERT(xs <  (xs + ys));
+    RC_ASSERT(xs <= (xs + ys));
+}
+
+// Tests double precision pressure implementation
 RC_GTEST_PROP(Add, Associativef64, (const R64& xs, const R64& ys, const R64& zs)) {
     RC_ASSERT(((xs + ys) + zs) == (xs + ys + zs));
 }
@@ -128,6 +139,18 @@ RC_GTEST_PROP(MulVolume, Neutralf64, (const R64& xs)) {
 RC_GTEST_PROP(MulVolume, Zerof64, (const R64& xs)) {
     F64 ys(0.0);
     RC_ASSERT((xs * ys) == P64(0.0));
+}
+
+RC_GTEST_PROP(Comparison, Greaterf64, (const R64& xs)) {
+    R64 ys(1.0);
+    RC_ASSERT((xs + ys) > xs);
+    RC_ASSERT((xs + ys) >= xs);
+}
+
+RC_GTEST_PROP(Comparison, Lesserf64, (const R64& xs)) {
+    R64 ys(1.0);
+    RC_ASSERT(xs <  (xs + ys));
+    RC_ASSERT(xs <= (xs + ys));
 }
 
 int

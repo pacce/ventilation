@@ -4,9 +4,8 @@
 
 #include "test-arbitrary.hpp"
 
-using ventilation::Flow;
-using F32 = Flow<float>;
-using F64 = Flow<double>;
+using F32 = ventilation::Flow<float>;
+using F64 = ventilation::Flow<double>;
 
 RC_GTEST_PROP(Add, Associativef32, (const F32& xs, const F32& ys, const F32& zs)) {
     RC_ASSERT(((xs + ys) + zs) == (xs + ys + zs));
@@ -54,8 +53,19 @@ RC_GTEST_PROP(MulScalar, Zerof32, (const F32& xs)) {
     RC_ASSERT((xs * ys) == F32(ys));
 }
 
-// Tests double precision pressure implementation
+RC_GTEST_PROP(Comparison, Greaterf32, (const F32& xs)) {
+    F32 ys(1.0f);
+    RC_ASSERT((xs + ys) >  xs);
+    RC_ASSERT((xs + ys) >= xs);
+}
 
+RC_GTEST_PROP(Comparison, Lesserf32, (const F32& xs)) {
+    F32 ys(1.0f);
+    RC_ASSERT(xs <  (xs + ys));
+    RC_ASSERT(xs <= (xs + ys));
+}
+
+// Tests double precision pressure implementation
 RC_GTEST_PROP(Add, Associativef64, (const F64& xs, const F64& ys, const F64& zs)) {
     RC_ASSERT(((xs + ys) + zs) == (xs + ys + zs));
 }
@@ -100,6 +110,18 @@ RC_GTEST_PROP(MulScalar, Neutralf64, (const F64& xs)) {
 RC_GTEST_PROP(MulScalar, Zerof64, (const F64& xs)) {
     double ys = 0.0;
     RC_ASSERT((xs * ys) == F64(ys));
+}
+
+RC_GTEST_PROP(Comparison, Greaterf64, (const F64& xs)) {
+    F64 ys(1.0);
+    RC_ASSERT((xs + ys) >  xs);
+    RC_ASSERT((xs + ys) >= xs);
+}
+
+RC_GTEST_PROP(Comparison, Lesserf64, (const F64& xs)) {
+    F64 ys(1.0);
+    RC_ASSERT(xs <  (xs + ys));
+    RC_ASSERT(xs <= (xs + ys));
 }
 
 int

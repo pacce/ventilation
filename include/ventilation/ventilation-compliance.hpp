@@ -54,18 +54,28 @@ namespace ventilation {
                 return Compliance<Precision>(lhs.value_ * rhs.value_);
             }
 
-            friend bool
-            operator==(const Compliance<Precision>& lhs, const Compliance<Precision>& rhs) {
+            friend std::partial_ordering
+            operator<=>(const Compliance<Precision>& lhs, const Compliance<Precision>& rhs) {
+                if (std::isnan(lhs.value_) || std::isnan(rhs.value_)) {
+                    return std::partial_ordering::unordered;
+                }
                 const double DBL_TOLERANCE = 0.1;
-                return (lhs.value_ == rhs.value_)
-                    || (std::abs(lhs.value_ - rhs.value_) <= DBL_TOLERANCE)
-                    ;
+
+                Precision difference = lhs.value_ - rhs.value_;
+                if ((lhs.value_ == rhs.value_) || (std::abs(difference) <= DBL_TOLERANCE)) {
+                    return std::partial_ordering::equivalent;
+                } else if (difference > 0) {
+                    return std::partial_ordering::greater;
+                } else {
+                    return std::partial_ordering::less;
+                }
             }
 
             friend bool
-            operator!=(const Compliance<Precision>& lhs, const Compliance<Precision>& rhs) {
-                return !(lhs == rhs);
-            }
+            operator==(const Compliance<Precision>& lhs, const Compliance<Precision>& rhs) = default;
+
+            friend bool
+            operator!=(const Compliance<Precision>& lhs, const Compliance<Precision>& rhs) = default;
         private:
             Precision value_;
     };

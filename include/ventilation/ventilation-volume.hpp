@@ -71,18 +71,28 @@ namespace ventilation {
                 return Volume<Precision>(lhs * rhs.value_);
             }
 
-            friend bool
-            operator==(const Volume<Precision>& lhs, const Volume<Precision>& rhs) {
-                const double DBL_TOLERANCE = 1e-4; // 1000.0 mL == 1000.9 mL
-                return (lhs.value_ == rhs.value_)
-                    || (std::abs(lhs.value_ - rhs.value_) <= DBL_TOLERANCE)
-                    ;
+            friend std::partial_ordering
+            operator<=>(const Volume<Precision>& lhs, const Volume<Precision>& rhs) {
+                if (std::isnan(lhs.value_) || std::isnan(rhs.value_)) {
+                    return std::partial_ordering::unordered;
+                }
+                const double DBL_TOLERANCE = 1e-4;
+
+                Precision difference = lhs.value_ - rhs.value_;
+                if ((lhs.value_ == rhs.value_) || (std::abs(difference) <= DBL_TOLERANCE)) {
+                    return std::partial_ordering::equivalent;
+                } else if (difference > 0) {
+                    return std::partial_ordering::greater;
+                } else {
+                    return std::partial_ordering::less;
+                }
             }
 
             friend bool
-            operator!=(const Volume<Precision>& lhs, const Volume<Precision>& rhs) {
-                return !(lhs == rhs);
-            }
+            operator==(const Volume<Precision>& lhs, const Volume<Precision>& rhs) = default;
+
+            friend bool
+            operator!=(const Volume<Precision>& lhs, const Volume<Precision>& rhs) = default;
         private:
             Precision value_;
     };
