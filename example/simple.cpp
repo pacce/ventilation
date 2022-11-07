@@ -1,4 +1,5 @@
 #include <chrono>
+#include <iomanip>
 #include <iostream>
 #include <ventilation/ventilation.hpp>
 
@@ -22,7 +23,7 @@ main(int argc, char** argv) {
 
     for (std::size_t i = 0; i < 1000; i++) {
         ventilation::modes::Packet packet = ventilator(lung, step);
-        std::cout << packet << std::endl;
+        std::cout << std::fixed << std::setprecision(15) << packet << std::endl;
     }
     exit(EXIT_SUCCESS);
 }

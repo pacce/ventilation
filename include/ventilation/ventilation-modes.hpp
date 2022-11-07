@@ -26,9 +26,9 @@ namespace modes {
         operator<<(std::ostream& os, const Packet<Precision>& packet) {
             os  << packet.pressure
                 << ", "
-                << packet.flow * 60.0
+                << packet.flow
                 << ", "
-                << packet.volume * 1000.0
+                << packet.volume
                 ;
             return os;
         }

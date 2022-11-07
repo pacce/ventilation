@@ -14,10 +14,7 @@ namespace ventilation {
 
             friend std::ostream&
             operator<<(std::ostream& os, const Volume& p) {
-                os  << std::fixed
-                    << std::setprecision(1)
-                    << p.value_
-                    ;
+                os << p.value_;
                 return os;
             }
 
