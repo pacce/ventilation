@@ -1,6 +1,7 @@
 #ifndef VENTILATION_FLOW_HPP__
 #define VENTILATION_FLOW_HPP__
 
+#include <cmath>
 #include <iomanip>
 #include <ostream>
 

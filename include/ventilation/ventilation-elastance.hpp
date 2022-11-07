@@ -1,6 +1,7 @@
 #ifndef VENTILATION_ELASTANCE_HPP__
 #define VENTILATION_ELASTANCE_HPP__
 
+#include <cmath>
 #include <iomanip>
 #include <ostream>
 

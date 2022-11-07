@@ -1,6 +1,7 @@
 #ifndef VENTILATION_COMPLIANCE_HPP__
 #define VENTILATION_COMPLIANCE_HPP__
 
+#include <cmath>
 #include <iomanip>
 #include <ostream>
 

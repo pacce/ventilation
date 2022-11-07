@@ -1,6 +1,7 @@
 #ifndef VENTILATION_RESISTANCE_HPP__
 #define VENTILATION_RESISTANCE_HPP__
 
+#include <cmath>
 #include <iomanip>
 #include <ostream>
 
