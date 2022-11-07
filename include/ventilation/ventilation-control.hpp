@@ -75,6 +75,9 @@ namespace control {
                 Precision value = static_cast<Precision>(gain_ * (target_ - current));
                 return Flow(value);
             }
+
+            void
+            set_target(const Target<Precision>& target) { target_ = target; }
         private:
             Gain<Precision>     gain_;
             Target<Precision>   target_;

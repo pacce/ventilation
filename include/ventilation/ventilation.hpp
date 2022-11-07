@@ -14,5 +14,6 @@
 #include "ventilation-lung.hpp"
 
 #include "ventilation-traits.hpp"
+#include "ventilation-modes.hpp"
 
 #endif // VENTILATION_HPP__
