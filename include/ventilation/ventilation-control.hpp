@@ -1,6 +1,9 @@
 #ifndef VENTILATION_CONTROL_HPP__
 #define VENTILATION_CONTROL_HPP__
 
+#include <boost/circular_buffer.hpp>
+#include <numeric>
+
 #include "ventilation-flow.hpp"
 #include "ventilation-pressure.hpp"
 #include "ventilation-volume.hpp"
@@ -81,6 +84,36 @@ namespace control {
         private:
             Gain<Precision>     gain_;
             Target<Precision>   target_;
+    };
+
+    template <typename Precision, template <typename> typename Target>
+    class Integral {
+        static_assert(is_airway_type<Target<Precision>>::value);
+        public:
+            Integral(const Gain<Precision>& gain, const Target<Precision>& target)
+                : gain_(gain)
+                , target_(target)
+                , errors_(100)
+            {}
+
+            Flow<Precision>
+            operator()(const Target<Precision>& current) {
+                errors_.push_back(target_ - current);
+                Target<Precision> e = std::accumulate(errors_.begin(), errors_.end(), Target<Precision>());
+                Precision value     = static_cast<Precision>(gain_ * e);
+                return Flow(value);
+            }
+
+            void
+            set_target(const Target<Precision>& target) {
+                errors_.clear();
+                target_ = target;
+            }
+        private:
+            Gain<Precision>     gain_;
+            Target<Precision>   target_;
+
+            boost::circular_buffer<Target<Precision>> errors_;
     };
 } // namespace control
 } // namespace ventilation
