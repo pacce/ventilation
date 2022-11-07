@@ -67,7 +67,7 @@ namespace ventilation {
 
             friend bool
             operator==(const Flow<Precision>& lhs, const Flow<Precision>& rhs) {
-                const double DBL_TOLERANCE = 0.1;
+                const double DBL_TOLERANCE = 1e-3;
                 return (lhs.value_ == rhs.value_)
                     || (std::abs(lhs.value_ - rhs.value_) <= DBL_TOLERANCE)
                     ;
