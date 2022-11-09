@@ -5,23 +5,30 @@
 
 int
 main(int argc, char** argv) {
-    ventilation::Elastance<float>   elastance(1000.0 / 10.0);
-    ventilation::Resistance<float>  resistance(30.0);
-    ventilation::Lung<float> lung(resistance, elastance);
+    using namespace std::chrono_literals;
 
-    std::chrono::duration<float>        step(1 / 1000.0);
+    ventilation::Elastance<double>   elastance(1000.0 / 30.0);
+    ventilation::Resistance<double>  resistance(50.0);
+    ventilation::Lung<double> lung(resistance, elastance);
+
+    std::chrono::duration<double> step          = 100us;
+    std::chrono::duration<double> simulation    = 50s;
+    std::chrono::duration<double> current       = 0s;
 
     ventilation::cycle::Cycle cycle(
-              std::chrono::duration<float>(0.1f)
-            , std::chrono::duration<float>(0.2f)
+              std::chrono::duration<double>(0.6)
+            , std::chrono::duration<double>(2.4)
             );
     ventilation::modes::PCV ventilator(
-              ventilation::Pressure<float>( 5.0) // PEEP
-            , ventilation::Pressure<float>(20.0) // Peak Pressure
+              ventilation::Pressure<double>( 5.0) // PEEP
+            , ventilation::Pressure<double>(20.0) // Peak Pressure
             , cycle
             );
 
-    for (std::size_t i = 0; i < 1000; i++) {
+    while (true) {
+        if (current >= simulation) { break; }
+        current += step;
+
         ventilation::modes::Packet packet = ventilator(lung, step);
         std::cout << std::fixed << std::setprecision(15) << packet << std::endl;
     }
