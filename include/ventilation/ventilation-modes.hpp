@@ -46,8 +46,8 @@ namespace modes {
                 , peak_(peak)
                 , state_(cycle::State::INSPIRATION)
                 , cycle_(cycle)
-                , proportional_(control::Gain<Precision>(7e-2), peak_)
-                , integral_(control::Gain<Precision>(1e-3), peak_)
+                , proportional_(control::Gain<Precision>(5e-3), peak_)
+                , integral_(control::Gain<Precision>(6e-5), peak_)
             {}
 
             Packet<Precision>
@@ -78,7 +78,11 @@ namespace modes {
 
             Flow<Precision>
             estimate(const Pressure<Precision>& current) {
-                return proportional_(current) + integral_(current);
+                Flow<Precision> extreme(0.6);
+                return std::min(
+                          proportional_(current) + integral_(current)
+                        , extreme
+                        );
             }
             PEEP<Precision>     peep_;
             Pressure<Precision> peak_;
