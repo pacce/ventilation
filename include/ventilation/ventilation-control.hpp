@@ -1,8 +1,8 @@
 #ifndef VENTILATION_CONTROL_HPP__
 #define VENTILATION_CONTROL_HPP__
 
-#include <boost/circular_buffer.hpp>
 #include <numeric>
+#include <vector>
 
 #include "ventilation-flow.hpp"
 #include "ventilation-pressure.hpp"
@@ -93,7 +93,6 @@ namespace control {
             Integral(const Gain<Precision>& gain, const Target<Precision>& target)
                 : gain_(gain)
                 , target_(target)
-                , errors_(100)
             {}
 
             Flow<Precision>
@@ -113,7 +112,7 @@ namespace control {
             Gain<Precision>     gain_;
             Target<Precision>   target_;
 
-            boost::circular_buffer<Target<Precision>> errors_;
+            std::vector<Target<Precision>> errors_;
     };
 } // namespace control
 } // namespace ventilation
