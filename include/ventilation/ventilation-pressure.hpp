@@ -91,6 +91,14 @@ namespace ventilation {
         private:
             Precision value_;
     };
+
+    template <typename Precision>
+    class PEEP : public Pressure<Precision> {
+        public:
+            explicit PEEP() : PEEP(Precision()) {}
+            explicit PEEP(Precision value) : Pressure<Precision>(value) {}
+            explicit PEEP(const Pressure<Precision>& p) : Pressure<Precision>(p) {}
+    };
 } // namespace ventilation
 
 #endif // VENTILATION_PRESSURE_HPP__

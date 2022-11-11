@@ -46,6 +46,16 @@ struct Arbitrary<ventilation::Pressure<Precision>> {
 };
 
 template<typename Precision>
+struct Arbitrary<ventilation::PEEP<Precision>> {
+    static Gen<ventilation::PEEP<Precision>>
+    arbitrary() {
+        return gen::construct<ventilation::PEEP<Precision>>(
+                gen::cast<Precision>(gen::inRange(-100, 100))
+                );
+    }
+};
+
+template<typename Precision>
 struct Arbitrary<ventilation::Resistance<Precision>> {
     static Gen<ventilation::Resistance<Precision>>
     arbitrary() {

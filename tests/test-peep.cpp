@@ -4,8 +4,8 @@
 
 #include "test-arbitrary.hpp"
 
-using P32 = ventilation::Pressure<float>;
-using P64 = ventilation::Pressure<double>;
+using P32 = ventilation::PEEP<float>;
+using P64 = ventilation::PEEP<double>;
 
 RC_GTEST_PROP(Add, Associativef32, (const P32& xs, const P32& ys, const P32& zs)) {
     RC_ASSERT(((xs + ys) + zs) == (xs + ys + zs));
