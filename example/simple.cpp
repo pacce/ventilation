@@ -20,8 +20,8 @@ main(int argc, char** argv) {
             , std::chrono::duration<double>(2.4)
             );
     ventilation::modes::PCV ventilator(
-              ventilation::Pressure<double>( 5.0) // PEEP
-            , ventilation::Pressure<double>(20.0) // Peak Pressure
+              ventilation::PEEP<double>( 5.0)           // PEEP
+            , ventilation::pressure::Peak<double>(20.0) // Peak Pressure
             , cycle
             );
 
