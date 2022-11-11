@@ -11,9 +11,9 @@
 
 namespace ventilation {
 namespace control {
-    template <typename Precision>
+    template <typename Precision, template <typename> typename T>
     class Gain {
-        static_assert(std::is_floating_point<Precision>::value);
+        static_assert(is_airway_type<T<Precision>>::value);
         public:
             explicit Gain() : Gain(Precision()) {}
             explicit Gain(Precision value) : value_(value) {}
@@ -27,48 +27,27 @@ namespace control {
                 return os;
             }
 
-            explicit operator Precision() const noexcept {
-                return value_;
+            friend T<Precision>
+            operator*(const Gain<Precision, T>& lhs, const T<Precision>& rhs) {
+                return lhs.value_ * rhs;
             }
 
-            friend Flow<Precision>
-            operator*(const Gain<Precision>& lhs, const Flow<Precision>& rhs) {
-                return Flow<Precision>(lhs.value_ * static_cast<Precision>(rhs));
-            }
-
-            friend Flow<Precision>
-            operator*(const Flow<Precision>& lhs, const Gain<Precision>& rhs) {
-                return Flow<Precision>(static_cast<Precision>(lhs) * rhs.value_);
-            }
-
-            friend Pressure<Precision>
-            operator*(const Gain<Precision>& lhs, const Pressure<Precision>& rhs) {
-                return Pressure<Precision>(lhs.value_ * static_cast<Precision>(rhs));
-            }
-
-            friend Pressure<Precision>
-            operator*(const Pressure<Precision>& lhs, const Gain<Precision>& rhs) {
-                return Pressure<Precision>(static_cast<Precision>(lhs) * rhs.value_);
-            }
-
-            friend Volume<Precision>
-            operator*(const Gain<Precision>& lhs, const Volume<Precision>& rhs) {
-                return Volume<Precision>(lhs.value_ * static_cast<Precision>(rhs));
-            }
-
-            friend Volume<Precision>
-            operator*(const Volume<Precision>& lhs, const Gain<Precision>& rhs) {
-                return Volume<Precision>(static_cast<Precision>(lhs) * rhs.value_);
+            friend T<Precision>
+            operator*(const T<Precision>& lhs, const Gain<Precision, T>& rhs) {
+                return lhs * rhs.value_;
             }
         private:
-            Precision value_;
+            T<Precision> value_;
     };
 
     template <typename Precision, template <typename> typename Target>
     class Proportional {
         static_assert(is_airway_type<Target<Precision>>::value);
         public:
-            Proportional(const Gain<Precision>& gain, const Target<Precision>& target)
+            Proportional(
+                    const Gain<Precision, Target>&  gain
+                    , const Target<Precision>&      target
+                    )
                 : gain_(gain)
                 , target_(target)
             {}
@@ -82,15 +61,15 @@ namespace control {
             void
             set_target(const Target<Precision>& target) { target_ = target; }
         private:
-            Gain<Precision>     gain_;
-            Target<Precision>   target_;
+            Gain<Precision, Target> gain_;
+            Target<Precision>       target_;
     };
 
     template <typename Precision, template <typename> typename Target>
     class Integral {
         static_assert(is_airway_type<Target<Precision>>::value);
         public:
-            Integral(const Gain<Precision>& gain, const Target<Precision>& target)
+            Integral(const Gain<Precision, Target>& gain, const Target<Precision>& target)
                 : gain_(gain)
                 , target_(target)
             {}
@@ -109,8 +88,8 @@ namespace control {
                 target_ = target;
             }
         private:
-            Gain<Precision>     gain_;
-            Target<Precision>   target_;
+            Gain<Precision, Target> gain_;
+            Target<Precision>       target_;
 
             std::vector<Target<Precision>> errors_;
     };

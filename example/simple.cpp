@@ -29,7 +29,7 @@ main(int argc, char** argv) {
         if (current >= simulation) { break; }
         current += step;
 
-        ventilation::modes::Packet packet = ventilator(lung, step);
+        ventilation::Packet packet = ventilator(lung, step);
         std::cout << std::fixed << std::setprecision(15) << packet << std::endl;
     }
     exit(EXIT_SUCCESS);

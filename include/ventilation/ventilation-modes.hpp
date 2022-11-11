@@ -29,8 +29,8 @@ namespace modes {
                 , peak_(peak)
                 , state_(cycle::State::INSPIRATION)
                 , cycle_(cycle)
-                , proportional_(control::Gain<Precision>(5e-3), peak_)
-                , integral_(control::Gain<Precision>(6e-5), peak_)
+                , proportional_(control::Gain<Precision, Pressure>(5e-3), peak_)
+                , integral_(control::Gain<Precision, Pressure>(6e-5), peak_)
             {}
 
             Packet<Precision>
