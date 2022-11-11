@@ -99,6 +99,23 @@ namespace ventilation {
             explicit PEEP(Precision value) : Pressure<Precision>(value) {}
             explicit PEEP(const Pressure<Precision>& p) : Pressure<Precision>(p) {}
     };
+namespace pressure {
+    template <typename Precision>
+    class Peak : public Pressure<Precision> {
+        public:
+            explicit Peak() : Peak(Precision()) {}
+            explicit Peak(Precision value) : Pressure<Precision>(value) {}
+            explicit Peak(const Pressure<Precision>& p) : Pressure<Precision>(p) {}
+    };
+
+    template <typename Precision>
+    class Delta : public Pressure<Precision> {
+        public:
+            explicit Delta() : Delta(Precision()) {}
+            explicit Delta(Precision value) : Pressure<Precision>(value) {}
+            explicit Delta(const Pressure<Precision>& p) : Pressure<Precision>(p) {}
+    };
+} // namespace pressure
 } // namespace ventilation
 
 #endif // VENTILATION_PRESSURE_HPP__

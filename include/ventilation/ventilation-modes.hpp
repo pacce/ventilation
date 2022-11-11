@@ -15,15 +15,12 @@
 namespace ventilation {
 namespace modes {
     template <typename Precision>
-    using PEEP = Pressure<Precision>;
-
-    template <typename Precision>
     class PCV {
         public:
             PCV(
-                    const PEEP<Precision>&          peep
-                    , const Pressure<Precision>&    peak
-                    , cycle::Cycle<Precision>&      cycle
+                      const PEEP<Precision>&            peep
+                    , const pressure::Peak<Precision>&  peak
+                    , cycle::Cycle<Precision>&          cycle
                )
                 : peep_(peep)
                 , peak_(peak)
@@ -67,8 +64,8 @@ namespace modes {
                         , extreme
                         );
             }
-            PEEP<Precision>     peep_;
-            Pressure<Precision> peak_;
+            PEEP<Precision>             peep_;
+            pressure::Peak<Precision>   peak_;
             Packet<Precision>   current_;
 
             cycle::State            state_;

@@ -50,7 +50,27 @@ struct Arbitrary<ventilation::PEEP<Precision>> {
     static Gen<ventilation::PEEP<Precision>>
     arbitrary() {
         return gen::construct<ventilation::PEEP<Precision>>(
-                gen::cast<Precision>(gen::inRange(-100, 100))
+                gen::arbitrary<ventilation::Pressure<Precision>>()
+                );
+    }
+};
+
+template<typename Precision>
+struct Arbitrary<ventilation::pressure::Delta<Precision>> {
+    static Gen<ventilation::pressure::Delta<Precision>>
+    arbitrary() {
+        return gen::construct<ventilation::pressure::Delta<Precision>>(
+                gen::arbitrary<ventilation::Pressure<Precision>>()
+                );
+    }
+};
+
+template<typename Precision>
+struct Arbitrary<ventilation::pressure::Peak<Precision>> {
+    static Gen<ventilation::pressure::Peak<Precision>>
+    arbitrary() {
+        return gen::construct<ventilation::pressure::Peak<Precision>>(
+                gen::arbitrary<ventilation::Pressure<Precision>>()
                 );
     }
 };
