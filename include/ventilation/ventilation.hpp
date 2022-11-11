@@ -7,6 +7,7 @@
 #include "ventilation-pressure.hpp"
 #include "ventilation-resistance.hpp"
 #include "ventilation-volume.hpp"
+#include "ventilation-packet.hpp"
 
 #include "ventilation-cycle.hpp"
 #include "ventilation-control.hpp"

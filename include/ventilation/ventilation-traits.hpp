@@ -6,6 +6,7 @@
 #include "ventilation-compliance.hpp"
 #include "ventilation-elastance.hpp"
 #include "ventilation-flow.hpp"
+#include "ventilation-packet.hpp"
 #include "ventilation-pressure.hpp"
 #include "ventilation-resistance.hpp"
 #include "ventilation-volume.hpp"
@@ -34,6 +35,14 @@ namespace ventilation {
                           ,  std::is_same<Volume<      float>, typename std::remove_cv<T>::type>::value
                           || std::is_same<Volume<     double>, typename std::remove_cv<T>::type>::value
                           || std::is_same<Volume<long double>, typename std::remove_cv<T>::type>::value
+                          > {};
+
+    template <typename T>
+    struct is_packet_type : std::integral_constant<
+                          bool
+                          ,  std::is_same<Packet<      float>, typename std::remove_cv<T>::type>::value
+                          || std::is_same<Packet<     double>, typename std::remove_cv<T>::type>::value
+                          || std::is_same<Packet<long double>, typename std::remove_cv<T>::type>::value
                           > {};
 
     template <typename T>
@@ -73,7 +82,12 @@ namespace ventilation {
                             > {};
 
     template <typename T>
-    struct is_ventilation_type : std::integral_constant<bool, is_airway_type<T>::value || is_lung_type<T>::value>
+    struct is_ventilation_type : std::integral_constant<
+                                 bool
+                                 ,  is_airway_type<T>::value
+                                 || is_lung_type<T>::value
+                                 || is_packet_type<T>::value
+                                 >
     {};
 } // namespace ventilation
 

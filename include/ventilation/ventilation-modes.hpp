@@ -6,6 +6,7 @@
 #include "ventilation-flow.hpp"
 #include "ventilation-pressure.hpp"
 #include "ventilation-volume.hpp"
+#include "ventilation-packet.hpp"
 
 #include "ventilation-control.hpp"
 #include "ventilation-cycle.hpp"
@@ -15,24 +16,6 @@ namespace ventilation {
 namespace modes {
     template <typename Precision>
     using PEEP = Pressure<Precision>;
-
-    template <typename Precision>
-    struct Packet {
-        Flow<Precision>        flow;
-        Pressure<Precision>    pressure;
-        Volume<Precision>      volume;
-
-        friend std::ostream&
-        operator<<(std::ostream& os, const Packet<Precision>& packet) {
-            os  << packet.pressure
-                << ", "
-                << packet.flow
-                << ", "
-                << packet.volume
-                ;
-            return os;
-        }
-    };
 
     template <typename Precision>
     class PCV {
