@@ -10,6 +10,7 @@
 
 #include "ventilation-control.hpp"
 #include "ventilation-cycle.hpp"
+#include "ventilation-integration.hpp"
 #include "ventilation-lung.hpp"
 
 namespace ventilation {
