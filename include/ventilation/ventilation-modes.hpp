@@ -27,8 +27,11 @@ namespace modes {
                 , peak_(peak)
                 , state_(cycle::State::INSPIRATION)
                 , cycle_(cycle)
-                , proportional_(control::Gain<Precision, Pressure>(5e-3), peak_)
-                , integral_(control::Gain<Precision, Pressure>(6e-5), peak_)
+                , control_(
+                          control::Gain<Precision, Pressure>(5e-3)
+                        , control::Gain<Precision, Pressure>(6e-5)
+                        , peak_
+                        )
             {}
 
             Packet<Precision>
@@ -37,9 +40,9 @@ namespace modes {
                 if (state != state_) {
                     switch(state) {
                         case ventilation::cycle::State::INSPIRATION:
-                        { set_target(peak_); break; }
+                        { control_.set_target(peak_); break; }
                         case ventilation::cycle::State::EXPIRATION:
-                        { set_target(peep_); break; }
+                        { control_.set_target(peep_); break; }
                     }
                     state_ = state;
                 }
@@ -51,19 +54,10 @@ namespace modes {
                 return current_;
             }
         private:
-            void
-            set_target(const Pressure<Precision>& target) {
-                proportional_.set_target(target);
-                integral_.set_target(target);
-            }
-
             Flow<Precision>
             estimate(const Pressure<Precision>& current) {
                 Flow<Precision> extreme(0.6);
-                return std::min(
-                          proportional_(current) + integral_(current)
-                        , extreme
-                        );
+                return std::min(control_(current), extreme);
             }
             PEEP<Precision>             peep_;
             pressure::Peak<Precision>   peak_;
@@ -72,8 +66,7 @@ namespace modes {
             cycle::State            state_;
             cycle::Cycle<Precision> cycle_;
 
-            control::Proportional<Precision, Pressure>  proportional_;
-            control::Integral<Precision, Pressure>      integral_;
+            Control<Precision, Pressure> control_;
     };
 } // namespace modes
 } // namespace ventilation

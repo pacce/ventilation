@@ -93,7 +93,41 @@ namespace control {
 
             std::vector<Target<Precision>> errors_;
     };
+
 } // namespace control
+    // PI control
+    template <typename Precision, template <typename> typename Target>
+    class Control {
+        static_assert(is_airway_type<Target<Precision>>::value);
+        using Gain          = control::Gain<Precision, Target>;
+        using Proportional  = control::Proportional<Precision, Target>;
+        using Integral      = control::Integral<Precision, Target>;
+
+        public:
+            Control(const Proportional& proportional, const Integral& integral)
+                : proportional_(proportional)
+                , integral_(integral)
+            {}
+
+            Control(const Gain& p, const Gain& i, const Target<Precision>& target)
+                : proportional_(p, target)
+                , integral_(i, target)
+            {}
+
+            Flow<Precision>
+            operator()(const Target<Precision>& current) {
+                return proportional_(current) + integral_(current);
+            }
+
+            void
+            set_target(const Target<Precision>& target) {
+                proportional_.set_target(target);
+                integral_.set_target(target);
+            }
+        private:
+            Proportional    proportional_;
+            Integral        integral_;
+    };
 } // namespace ventilation
 
 #endif // VENTILATION_CONTROL_HPP__
