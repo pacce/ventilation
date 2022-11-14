@@ -56,9 +56,9 @@ namespace modes {
                 if (state != state_) {
                     switch(state) {
                         case ventilation::cycle::State::INSPIRATION:
-                        { control_.set_target(peak_); break; }
+                        { control_.set(peak_); break; }
                         case ventilation::cycle::State::EXPIRATION:
-                        { control_.set_target(peep_); break; }
+                        { control_.set(peep_); break; }
                     }
                     state_ = state;
                 }
