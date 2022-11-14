@@ -1,1 +1,2 @@
-executable('simple', 'simple.cpp', dependencies: [ventilation_dep])
+executable('pcv', 'pcv.cpp', dependencies: [ventilation_dep])
+executable('vcv', 'vcv.cpp', dependencies: [ventilation_dep])

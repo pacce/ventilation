@@ -4,7 +4,7 @@
 #include <ventilation/ventilation.hpp>
 
 int
-main(int argc, char** argv) {
+main() {
     using namespace std::chrono_literals;
 
     ventilation::Elastance<double>   elastance(1000.0 / 30.0);
@@ -17,14 +17,13 @@ main(int argc, char** argv) {
 
     ventilation::cycle::Cycle cycle(
               std::chrono::duration<double>(0.6)
-            , std::chrono::duration<double>(3.6)
+            , std::chrono::duration<double>(2.4)
             );
-    ventilation::modes::VCV ventilator(cycle);
-    // ventilation::modes::PCV ventilator(
-    //           ventilation::PEEP<double>( 5.0)           // PEEP
-    //         , ventilation::pressure::Peak<double>(20.0) // Peak Pressure
-    //         , cycle
-    //         );
+    ventilation::modes::PCV ventilator(
+              ventilation::PEEP<double>( 5.0)           // PEEP
+            , ventilation::pressure::Peak<double>(20.0) // Peak Pressure
+            , cycle
+            );
 
     while (true) {
         if (current >= simulation) { break; }

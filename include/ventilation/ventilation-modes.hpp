@@ -71,31 +71,27 @@ namespace modes {
         template <template <typename> typename Target>
         using Gain = control::Gain<Precision, Target>;
         public:
-            VCV(cycle::Cycle<Precision>& cycle)
+            VCV(
+                      const PEEP<Precision>&    peep
+                    , const Flow<Precision>&    flow
+                    , cycle::Cycle<Precision>&  cycle
+               )
                 : state_(cycle::State::INSPIRATION)
                 , cycle_(cycle)
-                , inspiration_(Gain<Flow>(5e-3), Gain<Flow>(6e-5), Flow(0.5))
-                , expiration_(Gain<Pressure>(5e-3), Gain<Pressure>(6e-5), PEEP(5.0))
+                , inspiration_(Gain<Flow>(5e-3), Gain<Flow>(6e-3), flow)
+                , expiration_(Gain<Pressure>(5e-3), Gain<Pressure>(6e-5), peep)
             {}
 
             Packet<Precision>
             operator()(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step) {
                 switch(cycle_(step)) {
                     case ventilation::cycle::State::INSPIRATION:
-                    { 
-                        current_.flow       = inspiration_(current_.flow);
-                        current_.volume     += integration::square(current_.flow, step);
-                        current_.pressure   = lung.forward(current_.flow, current_.volume);
-                        break;
-                    }
+                    { current_.flow = inspiration_(current_.flow); break; }
                     case ventilation::cycle::State::EXPIRATION:
-                    { 
-                        current_.flow       = expiration_(current_.pressure);
-                        current_.volume     += integration::square(current_.flow, step);
-                        current_.pressure   = lung.forward(current_.flow, current_.volume);
-                        break;
-                    }
+                    { current_.flow = expiration_(current_.pressure); break; }
                 }
+                current_.volume     += integration::square(current_.flow, step);
+                current_.pressure   = lung.forward(current_.flow, current_.volume);
                 return current_;
             }
         private:
