@@ -84,9 +84,12 @@ namespace control {
 
             void
             set_target(const Target<Precision>& target) {
-                errors_.clear();
+                this->clear();
                 target_ = target;
             }
+
+            void
+            clear() { errors_.clear(); }
         private:
             Gain<Precision, Target> gain_;
             Target<Precision>       target_;
@@ -124,6 +127,9 @@ namespace control {
                 proportional_.set_target(target);
                 integral_.set_target(target);
             }
+
+            void
+            clear() { integral_.clear(); }
         private:
             Proportional    proportional_;
             Integral        integral_;

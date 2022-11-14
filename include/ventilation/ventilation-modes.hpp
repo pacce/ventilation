@@ -109,7 +109,17 @@ namespace modes {
         private:
             Packet<Precision>
             stimulate(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step) {
-                switch(cycle_(step)) {
+                cycle::State state = cycle_(step);
+                if (state != state_) {
+                    switch(state) {
+                        case ventilation::cycle::State::INSPIRATION:
+                        { inspiration_.clear(); break; }
+                        case ventilation::cycle::State::EXPIRATION:
+                        { expiration_.clear(); break; }
+                    }
+                    state_ = state;
+                }
+                switch(state) {
                     case ventilation::cycle::State::INSPIRATION:
                     { current_.flow = inspiration_(current_.flow); break; }
                     case ventilation::cycle::State::EXPIRATION:
