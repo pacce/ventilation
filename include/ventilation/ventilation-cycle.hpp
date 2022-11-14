@@ -5,14 +5,20 @@
 
 namespace ventilation  {
 namespace cycle  {
-    enum class State { EXPIRATION, INSPIRATION };
+    enum class State {
+          EXPIRATION
+        , INSPIRATION
+        , START_OF_EXPIRATION
+        , START_OF_INSPIRATION
+    };
 
     template <typename Precision>
     class Cycle {
         static_assert(std::is_floating_point<Precision>::value);
         public:
-            Cycle(const std::chrono::duration<Precision>& i, const std::chrono::duration<Precision>& e) 
-                : current_(Precision())
+            Cycle(const std::chrono::duration<Precision>& i, const std::chrono::duration<Precision>& e)
+                : state_(State::INSPIRATION)
+                , current_(Precision())
                 , inspiration_(i)
                 , expiration_(e)
             {}
@@ -25,12 +31,24 @@ namespace cycle  {
                 }
 
                 if (current_ <= inspiration_) {
-                    return State::INSPIRATION;
+                    if (state_ != State::INSPIRATION) {
+                        state_ = State::INSPIRATION;
+                        return State::START_OF_INSPIRATION;
+                    } else {
+                        return state_;
+                    }
                 } else {
-                    return State::EXPIRATION;
+                    if (state_ != State::EXPIRATION) {
+                        state_ = State::EXPIRATION;
+                        return State::START_OF_EXPIRATION;
+                    } else {
+                        return state_;
+                    }
                 }
             }
         private:
+            State state_;
+
             std::chrono::duration<Precision> current_;
             std::chrono::duration<Precision> inspiration_;
             std::chrono::duration<Precision> expiration_;

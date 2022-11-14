@@ -40,7 +40,6 @@ namespace modes {
                )
                 : peep_(peep)
                 , peak_(peak)
-                , state_(cycle::State::INSPIRATION)
                 , cycle_(cycle)
                 , control_(Gain(5e-3), Gain(6e-5), peak_)
             {}
@@ -52,15 +51,13 @@ namespace modes {
         private:
             Packet<Precision>
             stimulate(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step) {
-                cycle::State state = cycle_(step);
-                if (state != state_) {
-                    switch(state) {
-                        case ventilation::cycle::State::INSPIRATION:
-                        { control_.set(peak_); break; }
-                        case ventilation::cycle::State::EXPIRATION:
-                        { control_.set(peep_); break; }
-                    }
-                    state_ = state;
+                switch(cycle_(step)) {
+                    case ventilation::cycle::State::START_OF_INSPIRATION:
+                    { control_.set(peak_); control_.clear(); break; }
+                    case ventilation::cycle::State::START_OF_EXPIRATION:
+                    { control_.set(peep_); control_.clear(); break; }
+                    default:
+                    { break; }
                 }
 
                 current_.flow       = estimate(current_.pressure);
@@ -80,7 +77,6 @@ namespace modes {
             pressure::Peak<Precision>   peak_;
             Packet<Precision>   current_;
 
-            cycle::State            state_;
             cycle::Cycle<Precision> cycle_;
 
             Control<Precision, Pressure> control_;
@@ -96,8 +92,7 @@ namespace modes {
                     , const Flow<Precision>&    flow
                     , cycle::Cycle<Precision>&  cycle
                )
-                : state_(cycle::State::INSPIRATION)
-                , cycle_(cycle)
+                : cycle_(cycle)
                 , inspiration_(Gain<Flow>(5e-3), Gain<Flow>(6e-3), flow)
                 , expiration_(Gain<Pressure>(5e-3), Gain<Pressure>(6e-5), peep)
             {}
@@ -109,30 +104,36 @@ namespace modes {
         private:
             Packet<Precision>
             stimulate(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step) {
-                cycle::State state = cycle_(step);
-                if (state != state_) {
-                    switch(state) {
-                        case ventilation::cycle::State::INSPIRATION:
-                        { inspiration_.clear(); break; }
-                        case ventilation::cycle::State::EXPIRATION:
-                        { expiration_.clear(); break; }
-                    }
-                    state_ = state;
-                }
-                switch(state) {
+                switch(cycle_(step)) {
                     case ventilation::cycle::State::INSPIRATION:
-                    { current_.flow = inspiration_(current_.flow); break; }
+                    { return inspiration(lung, step); }
                     case ventilation::cycle::State::EXPIRATION:
-                    { current_.flow = expiration_(current_.pressure); break; }
+                    { return expiration(lung, step); }
+                    case ventilation::cycle::State::START_OF_INSPIRATION:
+                    { inspiration_.clear(); return inspiration(lung, step); }
+                    case ventilation::cycle::State::START_OF_EXPIRATION:
+                    { expiration_.clear(); return expiration(lung, step); }
                 }
+                return {Flow(0.0), Pressure(0.0), Volume(0.0)};
+            }
+
+            Packet<Precision>
+            inspiration(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step) {
+                current_.flow       = inspiration_(current_.flow);
+                current_.volume     += integration::square(current_.flow, step);
+                current_.pressure   = lung.forward(current_.flow, current_.volume);
+                return current_;
+            }
+
+            Packet<Precision>
+            expiration(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step) {
+                current_.flow       = expiration_(current_.pressure);
                 current_.volume     += integration::square(current_.flow, step);
                 current_.pressure   = lung.forward(current_.flow, current_.volume);
                 return current_;
             }
 
             Packet<Precision>   current_;
-
-            cycle::State            state_;
             cycle::Cycle<Precision> cycle_;
 
             Control<Precision, Flow>        inspiration_;
