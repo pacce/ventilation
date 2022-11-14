@@ -14,9 +14,23 @@
 #include "ventilation-lung.hpp"
 
 namespace ventilation {
+    template <typename Precision>
+    class Mode {
+        public:
+            virtual ~Mode() {}
+
+            Packet<Precision>
+            operator()(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step) {
+                return this->stimulate(lung, step);
+            }
+        private:
+            virtual Packet<Precision>
+            stimulate(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step);
+    };
+
 namespace modes {
     template <typename Precision>
-    class PCV {
+    class PCV : public Mode<Precision> {
         using Gain = control::Gain<Precision, Pressure>;
         public:
             PCV(
@@ -33,6 +47,11 @@ namespace modes {
 
             Packet<Precision>
             operator()(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step) {
+                return this->stimulate(lung, step);
+            }
+        private:
+            Packet<Precision>
+            stimulate(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step) {
                 cycle::State state = cycle_(step);
                 if (state != state_) {
                     switch(state) {
@@ -50,12 +69,13 @@ namespace modes {
 
                 return current_;
             }
-        private:
+
             Flow<Precision>
             estimate(const Pressure<Precision>& current) {
                 Flow<Precision> extreme(0.6);
                 return std::min(control_(current), extreme);
             }
+
             PEEP<Precision>             peep_;
             pressure::Peak<Precision>   peak_;
             Packet<Precision>   current_;
@@ -67,7 +87,7 @@ namespace modes {
     };
 
     template <typename Precision>
-    class VCV {
+    class VCV : public Mode<Precision> {
         template <template <typename> typename Target>
         using Gain = control::Gain<Precision, Target>;
         public:
@@ -84,6 +104,11 @@ namespace modes {
 
             Packet<Precision>
             operator()(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step) {
+                return this->stimulate(lung, step);
+            }
+        private:
+            Packet<Precision>
+            stimulate(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step) {
                 switch(cycle_(step)) {
                     case ventilation::cycle::State::INSPIRATION:
                     { current_.flow = inspiration_(current_.flow); break; }
@@ -94,7 +119,7 @@ namespace modes {
                 current_.pressure   = lung.forward(current_.flow, current_.volume);
                 return current_;
             }
-        private:
+
             Packet<Precision>   current_;
 
             cycle::State            state_;
