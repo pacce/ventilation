@@ -17,6 +17,7 @@ namespace ventilation {
 namespace modes {
     template <typename Precision>
     class PCV {
+        using Gain = control::Gain<Precision, Pressure>;
         public:
             PCV(
                       const PEEP<Precision>&            peep
@@ -27,11 +28,7 @@ namespace modes {
                 , peak_(peak)
                 , state_(cycle::State::INSPIRATION)
                 , cycle_(cycle)
-                , control_(
-                          control::Gain<Precision, Pressure>(5e-3)
-                        , control::Gain<Precision, Pressure>(6e-5)
-                        , peak_
-                        )
+                , control_(Gain(5e-3), Gain(6e-5), peak_)
             {}
 
             Packet<Precision>
@@ -67,6 +64,48 @@ namespace modes {
             cycle::Cycle<Precision> cycle_;
 
             Control<Precision, Pressure> control_;
+    };
+
+    template <typename Precision>
+    class VCV {
+        template <template <typename> typename Target>
+        using Gain = control::Gain<Precision, Target>;
+        public:
+            VCV(cycle::Cycle<Precision>& cycle)
+                : state_(cycle::State::INSPIRATION)
+                , cycle_(cycle)
+                , inspiration_(Gain<Flow>(5e-3), Gain<Flow>(6e-5), Flow(0.5))
+                , expiration_(Gain<Pressure>(5e-3), Gain<Pressure>(6e-5), PEEP(5.0))
+            {}
+
+            Packet<Precision>
+            operator()(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step) {
+                switch(cycle_(step)) {
+                    case ventilation::cycle::State::INSPIRATION:
+                    { 
+                        current_.flow       = inspiration_(current_.flow);
+                        current_.volume     += integration::square(current_.flow, step);
+                        current_.pressure   = lung.forward(current_.flow, current_.volume);
+                        break;
+                    }
+                    case ventilation::cycle::State::EXPIRATION:
+                    { 
+                        current_.flow       = expiration_(current_.pressure);
+                        current_.volume     += integration::square(current_.flow, step);
+                        current_.pressure   = lung.forward(current_.flow, current_.volume);
+                        break;
+                    }
+                }
+                return current_;
+            }
+        private:
+            Packet<Precision>   current_;
+
+            cycle::State            state_;
+            cycle::Cycle<Precision> cycle_;
+
+            Control<Precision, Flow>        inspiration_;
+            Control<Precision, Pressure>    expiration_;
     };
 } // namespace modes
 } // namespace ventilation

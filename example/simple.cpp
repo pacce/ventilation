@@ -17,13 +17,14 @@ main(int argc, char** argv) {
 
     ventilation::cycle::Cycle cycle(
               std::chrono::duration<double>(0.6)
-            , std::chrono::duration<double>(2.4)
+            , std::chrono::duration<double>(3.6)
             );
-    ventilation::modes::PCV ventilator(
-              ventilation::PEEP<double>( 5.0)           // PEEP
-            , ventilation::pressure::Peak<double>(20.0) // Peak Pressure
-            , cycle
-            );
+    ventilation::modes::VCV ventilator(cycle);
+    // ventilation::modes::PCV ventilator(
+    //           ventilation::PEEP<double>( 5.0)           // PEEP
+    //         , ventilation::pressure::Peak<double>(20.0) // Peak Pressure
+    //         , cycle
+    //         );
 
     while (true) {
         if (current >= simulation) { break; }
