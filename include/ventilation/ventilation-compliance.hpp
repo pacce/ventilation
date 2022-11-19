@@ -73,10 +73,14 @@ namespace ventilation {
             }
 
             friend bool
-            operator==(const Compliance<Precision>& lhs, const Compliance<Precision>& rhs) = default;
+            operator==(const Compliance<Precision>& lhs, const Compliance<Precision>& rhs) {
+                return (lhs <=> rhs) == std::partial_ordering::equivalent;
+            }
 
             friend bool
-            operator!=(const Compliance<Precision>& lhs, const Compliance<Precision>& rhs) = default;
+            operator!=(const Compliance<Precision>& lhs, const Compliance<Precision>& rhs) {
+                return (lhs <=> rhs) != std::partial_ordering::equivalent;
+            }
         private:
             Precision value_;
     };

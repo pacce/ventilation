@@ -90,10 +90,14 @@ namespace ventilation {
             }
 
             friend bool
-            operator==(const Volume<Precision>& lhs, const Volume<Precision>& rhs) = default;
+            operator==(const Volume<Precision>& lhs, const Volume<Precision>& rhs) {
+                return (lhs <=> rhs) == std::partial_ordering::equivalent;
+            }
 
             friend bool
-            operator!=(const Volume<Precision>& lhs, const Volume<Precision>& rhs) = default;
+            operator!=(const Volume<Precision>& lhs, const Volume<Precision>& rhs) {
+                return (lhs <=> rhs) != std::partial_ordering::equivalent;
+            }
         private:
             Precision value_;
     };
