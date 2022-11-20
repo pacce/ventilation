@@ -17,4 +17,6 @@
 #include "ventilation-traits.hpp"
 #include "ventilation-modes.hpp"
 
+#include "ventilation-mean.hpp"
+
 #endif // VENTILATION_HPP__
