@@ -4,9 +4,6 @@
 #include <memory>
 #include <ventilation/ventilation.hpp>
 
-using Mode  = ventilation::modes::Base<double>;
-using VCV   = ventilation::modes::VCV<double>;
-
 int
 main() {
     using namespace std::chrono_literals;
@@ -23,7 +20,7 @@ main() {
               std::chrono::duration<double>(0.6)
             , std::chrono::duration<double>(3.6)
             );
-    std::unique_ptr<Mode> ventilator = std::make_unique<VCV>(
+    ventilation::Modes<double> ventilator = ventilation::modes::VCV<double>( 
               ventilation::PEEP<double>(10.0)   // PEEP
             , ventilation::Flow<double>( 1.0)   // Peak Flow
             , cycle
@@ -33,7 +30,7 @@ main() {
         if (current >= simulation) { break; }
         current += step;
 
-        ventilation::Packet packet = ventilator->operator()(lung, step);
+        ventilation::Packet packet = std::get<2>(ventilator)(lung, step);
         std::cout << std::fixed << std::setprecision(4) << packet << std::endl;
     }
     exit(EXIT_SUCCESS);
