@@ -35,6 +35,9 @@ namespace modes {
             operator()(const lung::Forward<Precision>& lung, const std::chrono::duration<Precision>& step) {
                 return this->stimulate(lung, step);
             }
+
+            void set(const Flow<Precision>& flow) { inspiration_.set(flow); }
+            void set(const PEEP<Precision>& peep) { expiration_.set(peep); }
         private:
             Packet<Precision>
             stimulate(const lung::Forward<Precision>& lung, const std::chrono::duration<Precision>& step) {
