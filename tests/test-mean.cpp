@@ -11,6 +11,7 @@ RC_GTEST_PROP(Elastance, Constant, (const ventilation::Elastance<float>& x, uint
     Elastance expected = (size == 0) ? Elastance() : x;
 
     RC_ASSERT(ventilation::mean(xs) == expected);
+    RC_ASSERT(ventilation::mean(xs.begin(), xs.end()) == expected);
 }
 
 RC_GTEST_PROP(Flow, Constant, (const ventilation::Flow<float>& x, uint8_t size)) {
@@ -19,6 +20,7 @@ RC_GTEST_PROP(Flow, Constant, (const ventilation::Flow<float>& x, uint8_t size))
     Flow expected = (size == 0) ? Flow() : x;
 
     RC_ASSERT(ventilation::mean(xs) == expected);
+    RC_ASSERT(ventilation::mean(xs.begin(), xs.end()) == expected);
 }
 
 RC_GTEST_PROP(Pressure, Constant, (const ventilation::Pressure<float>& x, uint8_t size)) {
@@ -27,6 +29,7 @@ RC_GTEST_PROP(Pressure, Constant, (const ventilation::Pressure<float>& x, uint8_
     Pressure expected = (size == 0) ? Pressure() : x;
 
     RC_ASSERT(ventilation::mean(xs) == expected);
+    RC_ASSERT(ventilation::mean(xs.begin(), xs.end()) == expected);
 }
 
 RC_GTEST_PROP(Resistance, Constant, (const ventilation::Resistance<float>& x, uint8_t size)) {
@@ -35,6 +38,7 @@ RC_GTEST_PROP(Resistance, Constant, (const ventilation::Resistance<float>& x, ui
     Resistance expected = (size == 0) ? Resistance() : x;
 
     RC_ASSERT(ventilation::mean(xs) == expected);
+    RC_ASSERT(ventilation::mean(xs.begin(), xs.end()) == expected);
 }
 }
 
@@ -45,6 +49,7 @@ RC_GTEST_PROP(Elastance, Constant, (const ventilation::Elastance<double>& x, uin
     Elastance expected = (size == 0) ? Elastance() : x;
 
     RC_ASSERT(ventilation::mean(xs) == expected);
+    RC_ASSERT(ventilation::mean(xs.begin(), xs.end()) == expected);
 }
 
 RC_GTEST_PROP(Flow, Constant, (const ventilation::Flow<double>& x, uint8_t size)) {
@@ -53,6 +58,7 @@ RC_GTEST_PROP(Flow, Constant, (const ventilation::Flow<double>& x, uint8_t size)
     Flow expected = (size == 0) ? Flow() : x;
 
     RC_ASSERT(ventilation::mean(xs) == expected);
+    RC_ASSERT(ventilation::mean(xs.begin(), xs.end()) == expected);
 }
 
 RC_GTEST_PROP(Pressure, Constant, (const ventilation::Pressure<double>& x, uint8_t size)) {
@@ -61,6 +67,7 @@ RC_GTEST_PROP(Pressure, Constant, (const ventilation::Pressure<double>& x, uint8
     Pressure expected = (size == 0) ? Pressure() : x;
 
     RC_ASSERT(ventilation::mean(xs) == expected);
+    RC_ASSERT(ventilation::mean(xs.begin(), xs.end()) == expected);
 }
 
 RC_GTEST_PROP(Resistance, Constant, (const ventilation::Resistance<double>& x, uint8_t size)) {
@@ -69,6 +76,7 @@ RC_GTEST_PROP(Resistance, Constant, (const ventilation::Resistance<double>& x, u
     Resistance expected = (size == 0) ? Resistance() : x;
 
     RC_ASSERT(ventilation::mean(xs) == expected);
+    RC_ASSERT(ventilation::mean(xs.begin(), xs.end()) == expected);
 }
 }
 

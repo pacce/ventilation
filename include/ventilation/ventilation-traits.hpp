@@ -89,6 +89,15 @@ namespace ventilation {
                                  || is_packet_type<T>::value
                                  >
     {};
+
+    // Extracts precision from ventilation types
+    template <typename T> struct precision;
+    template <typename U> struct precision<Compliance<U>>   { typedef U type; };
+    template <typename U> struct precision<Elastance<U>>    { typedef U type; };
+    template <typename U> struct precision<Flow<U>>         { typedef U type; };
+    template <typename U> struct precision<Pressure<U>>     { typedef U type; };
+    template <typename U> struct precision<Resistance<U>>   { typedef U type; };
+    template <typename U> struct precision<Volume<U>>       { typedef U type; };
 } // namespace ventilation
 
 #endif // VENTILATION_TRAITS_HPP__
