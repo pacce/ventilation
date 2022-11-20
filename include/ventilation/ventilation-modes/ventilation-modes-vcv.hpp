@@ -12,12 +12,11 @@
 #include "ventilation/ventilation-cycle.hpp"
 #include "ventilation/ventilation-integration.hpp"
 #include "ventilation/ventilation-lung.hpp"
-#include "ventilation-modes-base.hpp"
 
 namespace ventilation {
 namespace modes {
     template <typename Precision>
-    class VCV : public Base<Precision> {
+    class VCV {
         template <template <typename> typename Target>
         using Gain = control::Gain<Precision, Target>;
         public:
