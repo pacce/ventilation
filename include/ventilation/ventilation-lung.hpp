@@ -10,15 +10,16 @@
 #include "ventilation-volume.hpp"
 
 namespace ventilation {
+namespace lung {
     template <typename Precision>
-    class Lung {
+    class Forward {
         public:
-            Lung(const Resistance<Precision>& resistance, const Elastance<Precision>& elastance)
+            Forward(const Resistance<Precision>& resistance, const Elastance<Precision>& elastance)
                 : resistance_(resistance)
                 , elastance_(elastance)
             {}
 
-            Lung(const Resistance<Precision>& resistance, const Compliance<Precision>& compliance)
+            Forward(const Resistance<Precision>& resistance, const Compliance<Precision>& compliance)
                 : resistance_(resistance)
             {
                 Precision c = static_cast<Precision>(compliance);
@@ -26,13 +27,20 @@ namespace ventilation {
             }
 
             Pressure<Precision>
-            forward(const Flow<Precision>& flow, const Volume<Precision>& volume) const {
+            operator()(const Flow<Precision>& flow, const Volume<Precision>& volume) const {
                 return flow * resistance_ + volume * elastance_;
             }
+
+            const Resistance<Precision>&
+            resistance() const { return resistance_; }
+
+            const Elastance<Precision>&
+            elastance() const { return elastance_; }
         private:
             Resistance<Precision>   resistance_;
             Elastance<Precision>    elastance_;
     };
+} // namespace lung
 } // namespace ventilation
 
 #endif // VENTILATION_LUNG_HPP__

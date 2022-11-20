@@ -11,9 +11,9 @@ int
 main() {
     using namespace std::chrono_literals;
 
-    ventilation::Elastance<double>   elastance(1000.0 / 30.0);
-    ventilation::Resistance<double>  resistance(50.0);
-    ventilation::Lung<double> lung(resistance, elastance);
+    ventilation::Elastance<double>      elastance(1000.0 / 30.0);
+    ventilation::Resistance<double>     resistance(50.0);
+    ventilation::lung::Forward<double>  lung(resistance, elastance);
 
     std::chrono::duration<double> step          = 100us;
     std::chrono::duration<double> simulation    = 50s;

@@ -20,12 +20,12 @@ namespace ventilation {
             virtual ~Mode() {}
 
             Packet<Precision>
-            operator()(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step) {
+            operator()(const lung::Forward<Precision>& lung, const std::chrono::duration<Precision>& step) {
                 return this->stimulate(lung, step);
             }
         private:
             virtual Packet<Precision>
-            stimulate(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step);
+            stimulate(const lung::Forward<Precision>& lung, const std::chrono::duration<Precision>& step);
     };
 
 namespace modes {
@@ -45,12 +45,12 @@ namespace modes {
             {}
 
             Packet<Precision>
-            operator()(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step) {
+            operator()(const lung::Forward<Precision>& lung, const std::chrono::duration<Precision>& step) {
                 return this->stimulate(lung, step);
             }
         private:
             Packet<Precision>
-            stimulate(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step) {
+            stimulate(const lung::Forward<Precision>& lung, const std::chrono::duration<Precision>& step) {
                 switch(cycle_(step)) {
                     case ventilation::cycle::State::START_OF_INSPIRATION:
                     { control_.set(peak_); control_.clear(); break; }
@@ -62,7 +62,7 @@ namespace modes {
 
                 current_.flow       = estimate(current_.pressure);
                 current_.volume     += integration::square(current_.flow, step);
-                current_.pressure   = lung.forward(current_.flow, current_.volume);
+                current_.pressure   = lung(current_.flow, current_.volume);
 
                 return current_;
             }
@@ -98,12 +98,12 @@ namespace modes {
             {}
 
             Packet<Precision>
-            operator()(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step) {
+            operator()(const lung::Forward<Precision>& lung, const std::chrono::duration<Precision>& step) {
                 return this->stimulate(lung, step);
             }
         private:
             Packet<Precision>
-            stimulate(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step) {
+            stimulate(const lung::Forward<Precision>& lung, const std::chrono::duration<Precision>& step) {
                 switch(cycle_(step)) {
                     case ventilation::cycle::State::INSPIRATION:
                     { return inspiration(lung, step); }
@@ -118,18 +118,18 @@ namespace modes {
             }
 
             Packet<Precision>
-            inspiration(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step) {
+            inspiration(const lung::Forward<Precision>& lung, const std::chrono::duration<Precision>& step) {
                 current_.flow       = inspiration_(current_.flow);
                 current_.volume     += integration::square(current_.flow, step);
-                current_.pressure   = lung.forward(current_.flow, current_.volume);
+                current_.pressure   = lung(current_.flow, current_.volume);
                 return current_;
             }
 
             Packet<Precision>
-            expiration(const Lung<Precision>& lung, const std::chrono::duration<Precision>& step) {
+            expiration(const lung::Forward<Precision>& lung, const std::chrono::duration<Precision>& step) {
                 current_.flow       = expiration_(current_.pressure);
                 current_.volume     += integration::square(current_.flow, step);
-                current_.pressure   = lung.forward(current_.flow, current_.volume);
+                current_.pressure   = lung(current_.flow, current_.volume);
                 return current_;
             }
 

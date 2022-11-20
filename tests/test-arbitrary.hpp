@@ -96,10 +96,10 @@ struct Arbitrary<ventilation::Volume<Precision>> {
 };
 
 template<typename Precision>
-struct Arbitrary<ventilation::Lung<Precision>> {
-    static Gen<ventilation::Lung<Precision>>
+struct Arbitrary<ventilation::lung::Forward<Precision>> {
+    static Gen<ventilation::lung::Forward<Precision>>
     arbitrary() {
-        return gen::construct<ventilation::Lung<Precision>>(
+        return gen::construct<ventilation::lung::Forward<Precision>>(
                   gen::arbitrary<ventilation::Resistance<Precision>>()
                 , gen::arbitrary<ventilation::Elastance<Precision>>()
                 );
