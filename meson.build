@@ -11,7 +11,10 @@ ventilation = library(
   , install             : true
   )
 
-ventilation_dep = declare_dependency(link_with: ventilation, include_directories: includes)
+ventilation_dep = declare_dependency(
+    link_with           : ventilation
+  , include_directories : includes
+  )
 
 if not meson.is_subproject()
   subdir('example')

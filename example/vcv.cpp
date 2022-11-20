@@ -4,7 +4,7 @@
 #include <memory>
 #include <ventilation/ventilation.hpp>
 
-using Mode  = ventilation::Mode<double>;
+using Mode  = ventilation::modes::Base<double>;
 using VCV   = ventilation::modes::VCV<double>;
 
 int

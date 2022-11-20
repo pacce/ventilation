@@ -15,7 +15,7 @@
 #include "ventilation-lung.hpp"
 
 #include "ventilation-traits.hpp"
-#include "ventilation-modes.hpp"
+#include "ventilation-modes/ventilation-modes.hpp"
 
 #include "ventilation-mean.hpp"
 
