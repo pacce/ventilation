@@ -22,7 +22,7 @@ namespace frequency {
 
             std::chrono::duration<Precision>
             period() const {
-                return std::chrono::duration(1.0 / value_);
+                return std::chrono::duration<Precision>(1.0 / value_);
             }
 
             friend std::ostream&
@@ -33,7 +33,6 @@ namespace frequency {
         private:
             Precision value_;
     };
-
 namespace literals {
     constexpr ventilation::frequency::Frequency<double>
     operator""_hz(long double value) {

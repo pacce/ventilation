@@ -1,6 +1,8 @@
 #ifndef VENTILATION_HPP__
 #define VENTILATION_HPP__
 
+#include "ventilation-traits.hpp"
+
 #include "ventilation-compliance.hpp"
 #include "ventilation-elastance.hpp"
 #include "ventilation-flow.hpp"
@@ -14,10 +16,11 @@
 #include "ventilation-integration.hpp"
 #include "ventilation-lung.hpp"
 
-#include "ventilation-traits.hpp"
 #include "ventilation-modes/ventilation-modes.hpp"
 
 #include "ventilation-mean.hpp"
+
 #include "ventilation-frequency.hpp"
+#include "ventilation-ratio.hpp"
 
 #endif // VENTILATION_HPP__
