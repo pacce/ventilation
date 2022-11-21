@@ -18,5 +18,6 @@
 #include "ventilation-modes/ventilation-modes.hpp"
 
 #include "ventilation-mean.hpp"
+#include "ventilation-frequency.hpp"
 
 #endif // VENTILATION_HPP__
