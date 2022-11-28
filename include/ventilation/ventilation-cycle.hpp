@@ -2,6 +2,8 @@
 #define VENTILATION_CYCLE_HPP__
 
 #include <chrono>
+#include "ventilation-frequency.hpp"
+#include "ventilation-ratio.hpp"
 
 namespace ventilation  {
 namespace cycle  {
@@ -21,6 +23,13 @@ namespace cycle  {
                 , current_(Precision())
                 , inspiration_(i)
                 , expiration_(e)
+            {}
+
+            Cycle(const frequency::Frequency<Precision>& f, const ratio::Ratio<Precision>& r)
+                : state_(State::INSPIRATION)
+                , current_(Precision())
+                , inspiration_(r.inspiration(f))
+                , expiration_(r.expiration(f))
             {}
 
             State
