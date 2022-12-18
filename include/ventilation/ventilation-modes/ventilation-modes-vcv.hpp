@@ -37,6 +37,9 @@ namespace modes {
 
             void set(const Flow<Precision>& flow) { inspiration_.set(flow); }
             void set(const PEEP<Precision>& peep) { expiration_.set(peep); }
+            void set(const cycle::Cycle<Precision>& cycle)  { cycle_ = cycle; }
+
+            const cycle::Cycle<Precision>& cycle() const    { return cycle_; }
         private:
             Packet<Precision>
             stimulate(const lung::Forward<Precision>& lung, const std::chrono::duration<Precision>& step) {

@@ -37,6 +37,11 @@ namespace modes {
 
             void set(const pressure::Peak<Precision>& peak) { peak_ = peak; }
             void set(const PEEP<Precision>& peep)           { peep_ = peep; }
+            void set(const cycle::Cycle<Precision>& cycle)  { cycle_ = cycle; }
+
+            const PEEP<Precision>& peep() const             { return peep_; }
+            const pressure::Peak<Precision>& peak() const   { return peak_; }
+            const cycle::Cycle<Precision>& cycle() const    { return cycle_; }
         private:
             Packet<Precision>
             stimulate(const lung::Forward<Precision>& lung, const std::chrono::duration<Precision>& step) {
