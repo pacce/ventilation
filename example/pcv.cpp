@@ -21,16 +21,18 @@ main() {
     ventilation::ratio::Ratio<double> ratio(1, 1);
     ventilation::cycle::Cycle cycle(f, ratio);
     ventilation::Modes<double> ventilator = ventilation::modes::PCV<double>(
-            ventilation::PEEP<double>( 5.0)           // PEEP
+            ventilation::PEEP<double>( 5.0)             // PEEP
             , ventilation::pressure::Peak<double>(20.0) // Peak Pressure
             , cycle
             );
+
+    ventilation::modes::visitor::Control<double> control{lung, step};
 
     while (true) {
         if (current >= simulation) { break; }
         current += step;
 
-        ventilation::Packet packet = std::get<1>(ventilator)(lung, step);
+        ventilation::Packet packet = std::visit(control, ventilator);
         std::cout << std::fixed << std::setprecision(15) << packet << std::endl;
     }
     exit(EXIT_SUCCESS);

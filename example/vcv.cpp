@@ -25,13 +25,14 @@ main() {
             , ventilation::Flow<double>( 1.0)   // Peak Flow
             , cycle
             );
+    ventilation::modes::visitor::Control<double> control{lung, step};
 
     while (true) {
         if (current >= simulation) { break; }
         current += step;
 
-        ventilation::Packet packet = std::get<2>(ventilator)(lung, step);
-        std::cout << std::fixed << std::setprecision(4) << packet << std::endl;
+        ventilation::Packet packet = std::visit(control, ventilator);
+        std::cout << std::fixed << std::setprecision(15) << packet << std::endl;
     }
     exit(EXIT_SUCCESS);
 }

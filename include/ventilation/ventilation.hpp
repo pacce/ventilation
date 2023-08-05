@@ -16,7 +16,8 @@
 #include "ventilation-integration.hpp"
 #include "ventilation-lung.hpp"
 
-#include "ventilation-modes/ventilation-modes.hpp"
+// #include "ventilation-modes/ventilation-modes.hpp"
+#include "ventilation-modes.hpp"
 
 #include "ventilation-mean.hpp"
 
