@@ -1,6 +1,7 @@
 #ifndef VENTILATION_RATIO_HPP__
 #define VENTILATION_RATIO_HPP__
 
+#include <cmath>
 #include <ostream>
 #include "ventilation-frequency.hpp"
 
