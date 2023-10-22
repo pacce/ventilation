@@ -24,7 +24,7 @@ namespace modes {
             PCV(
                       const PEEP<Precision>&            peep
                     , const pressure::Peak<Precision>&  peak
-                    , cycle::Cycle<Precision>&          cycle
+                    , const cycle::Cycle<Precision>&    cycle
                )
                 : peep_(peep)
                 , peak_(peak)
@@ -84,9 +84,9 @@ namespace modes {
         using Gain = control::Gain<Precision, Target>;
         public:
             VCV(
-                      const PEEP<Precision>&    peep
-                    , const Flow<Precision>&    flow
-                    , cycle::Cycle<Precision>&  cycle
+                      const PEEP<Precision>&            peep
+                    , const Flow<Precision>&            flow
+                    , const cycle::Cycle<Precision>&    cycle
                )
                 : cycle_(cycle)
                 , inspiration_(Gain<Flow>(5e-3), Gain<Flow>(6e-3), flow)
