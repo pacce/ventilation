@@ -116,7 +116,7 @@ namespace modes {
                     case ventilation::cycle::State::START_OF_EXPIRATION:
                     { expiration_.clear(); return expiration(lung, step); }
                 }
-                return {Flow(0.0), Pressure(0.0), Volume(0.0)};
+                return {Flow<Precision>(0.0), Pressure<Precision>(0.0), Volume<Precision>(0.0)};
             }
 
             Packet<Precision>
