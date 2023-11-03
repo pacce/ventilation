@@ -18,14 +18,13 @@ namespace cycle  {
     enum class Mark     { START_OF_EXPIRATION, START_OF_INSPIRATION };
 
     template <typename Precision>
+    using Time = std::chrono::duration<Precision>;
+
+    template <typename Precision>
     class Interval {
         static_assert(std::is_floating_point<Precision>::value);
         public:
-            Interval(
-                      const std::chrono::duration<Precision>&   start
-                    , const std::chrono::duration<Precision>&   finish
-                    , State                                     state
-                    )
+            Interval(const Time<Precision>& start, const Time<Precision>& finish, State state)
                 : start_(start)
                 , finish_(finish)
                 , state_(state)
@@ -56,35 +55,36 @@ namespace cycle  {
         static_assert(std::is_floating_point<Precision>::value);
         public:
             Cycle(
-                      const std::chrono::duration<Precision>& i     // Inspiratory Time
-                    , const std::chrono::duration<Precision>& fst   // Inspiratory Pause
-                    , const std::chrono::duration<Precision>& e     // Expiratory Time
-                    , const std::chrono::duration<Precision>& snd   // Inspiratory Pause
+                      const Time<Precision>&                i     // Inspiratory Time
+                    , const std::optional<Time<Precision>>& fst   // Inspiratory Pause
+                    , const Time<Precision>&                e     // Expiratory Time
+                    , const std::optional<Time<Precision>>& snd   // Inspiratory Pause
                     )
                 : current_(Precision())
                 , index_(0)
             {
                 using namespace std::chrono_literals;
 
-                intervals_.emplace_back(         0s,         i        , State::INSPIRATION);
-                intervals_.emplace_back(          i,         i + fst  , State::INSPIRATORY_PAUSE);
-                intervals_.emplace_back(    i + fst,       i + fst + e, State::EXPIRATION);
-                intervals_.emplace_back(i + fst + e, i + fst + e + snd, State::EXPIRATORY_PAUSE);
-            }
-
-            Cycle(
-                      const std::chrono::duration<Precision>& i // Inspiratory Time
-                    , const std::chrono::duration<Precision>& p // Inspiratory Pause
-                    , const std::chrono::duration<Precision>& e // Expiratory Time
-                    )
-                : current_(Precision())
-                , index_(0)
-            {
-                using namespace std::chrono_literals;
-
-                intervals_.emplace_back(   0s, i        , State::INSPIRATION);
-                intervals_.emplace_back(    i, i + p    , State::INSPIRATORY_PAUSE);
-                intervals_.emplace_back(i + p, i + p + e, State::EXPIRATION);
+                // Inspiratory phase
+                Time<Precision> prev = 0s;
+                Time<Precision> next = i;
+                intervals_.emplace_back(prev, next, State::INSPIRATION);
+                // Inspiratory pause
+                if (fst) {
+                    prev  = next;
+                    next += *fst;
+                    intervals_.emplace_back(prev, next, State::INSPIRATORY_PAUSE);
+                }
+                // Expiratory phase
+                prev  = next;
+                next += e;
+                intervals_.emplace_back(prev, next, State::EXPIRATION);
+                // Expiratory pause
+                if (snd) {
+                    prev  = next;
+                    next += *snd;
+                    intervals_.emplace_back(prev, next, State::EXPIRATORY_PAUSE);
+                }
             }
 
             Cycle(

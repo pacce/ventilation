@@ -17,7 +17,7 @@ main() {
     std::chrono::duration<double> simulation    = 50s;
     std::chrono::duration<double> current       = 0s;
 
-    ventilation::cycle::Cycle cycle(
+    ventilation::cycle::Cycle<double> cycle(
               std::chrono::duration<double>(1.0)
             , std::chrono::duration<double>(0.5)
             , std::chrono::duration<double>(3.0)

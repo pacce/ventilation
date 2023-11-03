@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <ventilation/ventilation.hpp>
 
 int
@@ -16,11 +17,11 @@ main() {
     std::chrono::duration<double> simulation    = 50s;
     std::chrono::duration<double> current       = 0s;
 
-    ventilation::cycle::Cycle cycle(
+    ventilation::cycle::Cycle<double> cycle(
               std::chrono::duration<double>(0.6)
             , std::chrono::duration<double>(0.4)
             , std::chrono::duration<double>(3.2)
-            , std::chrono::duration<double>(3.4)
+            , {}
             );
     ventilation::Modes<double> ventilator = ventilation::modes::VCV<double>( 
               ventilation::PEEP<double>(10.0)   // PEEP
