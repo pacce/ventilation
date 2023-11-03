@@ -31,7 +31,6 @@ namespace modes {
                 , peak_(peak)
                 , cycle_(cycle)
                 , control_(Gain(5e-3), Gain(6e-5), peak_)
-                , counter_(0)
             {}
 
             Packet<Precision>
@@ -61,17 +60,29 @@ namespace modes {
 
                 switch(cycle_.state()) {
                     case cycle::State::INSPIRATION:
-                    { current_.flow = estimate(current_.pressure); break; }
-                    case cycle::State::INSPIRATORY_PAUSE:
-                    { current_.flow = Flow<Precision>(); break; }
                     case cycle::State::EXPIRATION:
-                    { current_.flow = estimate(current_.pressure); break; }
+                        return breathe(lung, step);
+                    case cycle::State::INSPIRATORY_PAUSE:
                     case cycle::State::EXPIRATORY_PAUSE:
-                    { current_.flow = Flow<Precision>(); break; }
+                        return pause(lung, step);
+                    default:
+                        return {Flow<Precision>(), Pressure<Precision>(), Volume<Precision>()};
                 }
+            }
+
+            Packet<Precision>
+            breathe(const lung::Forward<Precision>& lung, const std::chrono::duration<Precision>& step) {
+                current_.flow       = estimate(current_.pressure);
                 current_.volume     += integration::square(current_.flow, step);
                 current_.pressure   = lung(current_.flow, current_.volume);
+                return current_;
+            }
 
+            Packet<Precision>
+            pause(const lung::Forward<Precision>& lung, const std::chrono::duration<Precision>& step) {
+                current_.flow       = Flow<Precision>();
+                current_.volume     += integration::square(current_.flow, step);
+                current_.pressure   = lung(current_.flow, current_.volume);
                 return current_;
             }
 
@@ -88,7 +99,6 @@ namespace modes {
             cycle::Cycle<Precision>         cycle_;
 
             Control<Precision, Pressure>    control_;
-            int counter_;
     };
 
     template <typename Precision>
@@ -130,18 +140,14 @@ namespace modes {
                 switch(cycle_.state()) {
                     case cycle::State::INSPIRATION:
                         return inspiration(lung, step);
-                    case cycle::State::INSPIRATORY_PAUSE:
-                        return pause(lung, step);
                     case cycle::State::EXPIRATION:
                         return expiration(lung, step);
+                    case cycle::State::INSPIRATORY_PAUSE:
                     case cycle::State::EXPIRATORY_PAUSE:
                         return pause(lung, step);
+                    default:
+                        return {Flow<Precision>(), Pressure<Precision>(), Volume<Precision>()};
                 }
-                return Packet<Precision>{
-                      Flow<Precision>()
-                    , Pressure<Precision>()
-                    , Volume<Precision>()
-                };
             }
 
             Packet<Precision>
