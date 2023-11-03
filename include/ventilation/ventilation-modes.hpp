@@ -2,6 +2,7 @@
 #define VENTILATION_MODES_HPP__
 
 #include <chrono>
+#include <optional>
 #include <variant>
 
 #include "ventilation/ventilation-flow.hpp"
@@ -47,13 +48,14 @@ namespace modes {
         private:
             Packet<Precision>
             stimulate(const lung::Forward<Precision>& lung, const std::chrono::duration<Precision>& step) {
-                switch(cycle_(step)) {
-                    case ventilation::cycle::State::START_OF_INSPIRATION:
-                    { control_.set(peak_); control_.clear(); break; }
-                    case ventilation::cycle::State::START_OF_EXPIRATION:
-                    { control_.set(peep_); control_.clear(); break; }
-                    default:
-                    { break; }
+                std::optional<cycle::Mark> mark = cycle_(step);
+                if (not mark) {
+                } else if (*mark == cycle::Mark::START_OF_INSPIRATION) {
+                    control_.set(peak_);
+                    control_.clear();
+                } else if (*mark == cycle::Mark::START_OF_EXPIRATION) {
+                    control_.set(peep_);
+                    control_.clear();
                 }
 
                 current_.flow       = estimate(current_.pressure);
@@ -89,6 +91,7 @@ namespace modes {
                     , const cycle::Cycle<Precision>&    cycle
                )
                 : cycle_(cycle)
+                , state_(cycle::State::INSPIRATION)
                 , inspiration_(Gain<Flow>(5e-3), Gain<Flow>(6e-3), flow)
                 , expiration_(Gain<Pressure>(5e-3), Gain<Pressure>(6e-5), peep)
             {}
@@ -106,17 +109,21 @@ namespace modes {
         private:
             Packet<Precision>
             stimulate(const lung::Forward<Precision>& lung, const std::chrono::duration<Precision>& step) {
-                switch(cycle_(step)) {
-                    case ventilation::cycle::State::INSPIRATION:
-                    { return inspiration(lung, step); }
-                    case ventilation::cycle::State::EXPIRATION:
-                    { return expiration(lung, step); }
-                    case ventilation::cycle::State::START_OF_INSPIRATION:
-                    { inspiration_.clear(); return inspiration(lung, step); }
-                    case ventilation::cycle::State::START_OF_EXPIRATION:
-                    { expiration_.clear(); return expiration(lung, step); }
+                std::optional<cycle::Mark> mark = cycle_(step);
+                if (not mark) {
+                } else if (*mark == cycle::Mark::START_OF_INSPIRATION) {
+                    inspiration_.clear();
+                    state_ = cycle::State::INSPIRATION;
+                } else if (*mark == cycle::Mark::START_OF_EXPIRATION) {
+                    expiration_.clear();
+                    state_ = cycle::State::EXPIRATION;
                 }
-                return {Flow<Precision>(0.0), Pressure<Precision>(0.0), Volume<Precision>(0.0)};
+
+                if (state_ == cycle::State::INSPIRATION) {
+                    return inspiration(lung, step);
+                } else {
+                    return expiration(lung, step);
+                }
             }
 
             Packet<Precision>
@@ -135,8 +142,9 @@ namespace modes {
                 return current_;
             }
 
-            Packet<Precision>   current_;
+            Packet<Precision>       current_;
             cycle::Cycle<Precision> cycle_;
+            cycle::State            state_;
 
             Control<Precision, Flow>        inspiration_;
             Control<Precision, Pressure>    expiration_;

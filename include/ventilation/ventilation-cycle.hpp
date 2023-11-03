@@ -2,17 +2,15 @@
 #define VENTILATION_CYCLE_HPP__
 
 #include <chrono>
+#include <optional>
 #include "ventilation-frequency.hpp"
 #include "ventilation-ratio.hpp"
 
 namespace ventilation  {
 namespace cycle  {
-    enum class State {
-          EXPIRATION
-        , INSPIRATION
-        , START_OF_EXPIRATION
-        , START_OF_INSPIRATION
-    };
+    enum class State { EXPIRATION, INSPIRATION };
+
+    enum class Mark { START_OF_EXPIRATION, START_OF_INSPIRATION };
 
     template <typename Precision>
     class Cycle {
@@ -32,7 +30,7 @@ namespace cycle  {
                 , expiration_(r.expiration(f))
             {}
 
-            State
+            std::optional<Mark>
             operator()(const std::chrono::duration<Precision>& step) {
                 current_ += step;
                 if (current_ >= (inspiration_ + expiration_)) {
@@ -42,16 +40,16 @@ namespace cycle  {
                 if (current_ <= inspiration_) {
                     if (state_ != State::INSPIRATION) {
                         state_ = State::INSPIRATION;
-                        return State::START_OF_INSPIRATION;
+                        return Mark::START_OF_INSPIRATION;
                     } else {
-                        return state_;
+                        return {};
                     }
                 } else {
                     if (state_ != State::EXPIRATION) {
                         state_ = State::EXPIRATION;
-                        return State::START_OF_EXPIRATION;
+                        return Mark::START_OF_EXPIRATION;
                     } else {
-                        return state_;
+                        return {};
                     }
                 }
             }
