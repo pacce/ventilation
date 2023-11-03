@@ -167,6 +167,39 @@ namespace visitor {
         }
     };
 } // namespace visitor
+namespace setter {
+    template <typename Precision>
+    struct PEEP {
+        const ventilation::PEEP<Precision> peep;
+
+        void operator()(PCV<Precision>& mode) const { mode.set(peep); }
+        void operator()(VCV<Precision>& mode) const { mode.set(peep); }
+    };
+
+    template <typename Precision>
+    struct Peak {
+        const ventilation::pressure::Peak<Precision> peak;
+
+        void operator()(PCV<Precision>& mode) const { mode.set(peak); }
+        void operator()(VCV<Precision>&) const {}
+    };
+
+    template <typename Precision>
+    struct Flow {
+        const ventilation::Flow<Precision> flow;
+
+        void operator()(PCV<Precision>&) const {}
+        void operator()(VCV<Precision>& mode) const { mode.set(flow); }
+    };
+
+    template <typename Precision>
+    struct Cycle {
+        const ventilation::cycle::Cycle<Precision> cycle;
+
+        void operator()(PCV<Precision>& mode) const { mode.set(cycle); }
+        void operator()(VCV<Precision>& mode) const { mode.set(cycle); }
+    };
+} // namespace setter
 } // namespace modes
 } // namespace ventilation
 
