@@ -31,6 +31,7 @@ namespace modes {
                 , peak_(peak)
                 , cycle_(cycle)
                 , control_(Gain(5e-3), Gain(6e-5), peak_)
+                , counter_(0)
             {}
 
             Packet<Precision>
@@ -58,7 +59,16 @@ namespace modes {
                     control_.clear();
                 }
 
-                current_.flow       = estimate(current_.pressure);
+                switch(cycle_.state()) {
+                    case cycle::State::INSPIRATION:
+                    { current_.flow = estimate(current_.pressure); break; }
+                    case cycle::State::INSPIRATORY_PAUSE:
+                    { current_.flow = Flow<Precision>(); break; }
+                    case cycle::State::EXPIRATION:
+                    { current_.flow = estimate(current_.pressure); break; }
+                    case cycle::State::EXPIRATORY_PAUSE:
+                    { current_.flow = Flow<Precision>(); break; }
+                }
                 current_.volume     += integration::square(current_.flow, step);
                 current_.pressure   = lung(current_.flow, current_.volume);
 
@@ -78,6 +88,7 @@ namespace modes {
             cycle::Cycle<Precision>         cycle_;
 
             Control<Precision, Pressure>    control_;
+            int counter_;
     };
 
     template <typename Precision>
@@ -91,7 +102,6 @@ namespace modes {
                     , const cycle::Cycle<Precision>&    cycle
                )
                 : cycle_(cycle)
-                , state_(cycle::State::INSPIRATION)
                 , inspiration_(Gain<Flow>(5e-3), Gain<Flow>(6e-3), flow)
                 , expiration_(Gain<Pressure>(5e-3), Gain<Pressure>(6e-5), peep)
             {}
@@ -113,17 +123,25 @@ namespace modes {
                 if (not mark) {
                 } else if (*mark == cycle::Mark::START_OF_INSPIRATION) {
                     inspiration_.clear();
-                    state_ = cycle::State::INSPIRATION;
                 } else if (*mark == cycle::Mark::START_OF_EXPIRATION) {
                     expiration_.clear();
-                    state_ = cycle::State::EXPIRATION;
                 }
 
-                if (state_ == cycle::State::INSPIRATION) {
-                    return inspiration(lung, step);
-                } else {
-                    return expiration(lung, step);
+                switch(cycle_.state()) {
+                    case cycle::State::INSPIRATION:
+                        return inspiration(lung, step);
+                    case cycle::State::INSPIRATORY_PAUSE:
+                        return pause(lung, step);
+                    case cycle::State::EXPIRATION:
+                        return expiration(lung, step);
+                    case cycle::State::EXPIRATORY_PAUSE:
+                        return pause(lung, step);
                 }
+                return Packet<Precision>{
+                      Flow<Precision>()
+                    , Pressure<Precision>()
+                    , Volume<Precision>()
+                };
             }
 
             Packet<Precision>
@@ -142,9 +160,16 @@ namespace modes {
                 return current_;
             }
 
+            Packet<Precision>
+            pause(const lung::Forward<Precision>& lung, const std::chrono::duration<Precision>& step) {
+                current_.flow       = Flow<Precision>();
+                current_.volume     += integration::square(current_.flow, step);
+                current_.pressure   = lung(current_.flow, current_.volume);
+                return current_;
+            }
+
             Packet<Precision>       current_;
             cycle::Cycle<Precision> cycle_;
-            cycle::State            state_;
 
             Control<Precision, Flow>        inspiration_;
             Control<Precision, Pressure>    expiration_;

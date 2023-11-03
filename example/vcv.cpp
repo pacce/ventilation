@@ -18,7 +18,9 @@ main() {
 
     ventilation::cycle::Cycle cycle(
               std::chrono::duration<double>(0.6)
-            , std::chrono::duration<double>(3.6)
+            , std::chrono::duration<double>(0.4)
+            , std::chrono::duration<double>(3.2)
+            , std::chrono::duration<double>(3.4)
             );
     ventilation::Modes<double> ventilator = ventilation::modes::VCV<double>( 
               ventilation::PEEP<double>(10.0)   // PEEP

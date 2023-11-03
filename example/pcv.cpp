@@ -17,9 +17,12 @@ main() {
     std::chrono::duration<double> simulation    = 50s;
     std::chrono::duration<double> current       = 0s;
 
-    ventilation::frequency::Frequency<double> f = 30.0_bpm;
-    ventilation::ratio::Ratio<double> ratio(1, 1);
-    ventilation::cycle::Cycle cycle(f, ratio);
+    ventilation::cycle::Cycle cycle(
+              std::chrono::duration<double>(1.0)
+            , std::chrono::duration<double>(0.5)
+            , std::chrono::duration<double>(3.0)
+            , std::chrono::duration<double>(0.5)
+            );
     ventilation::Modes<double> ventilator = ventilation::modes::PCV<double>(
             ventilation::PEEP<double>( 5.0)             // PEEP
             , ventilation::pressure::Peak<double>(20.0) // Peak Pressure
