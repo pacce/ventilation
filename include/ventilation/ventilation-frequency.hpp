@@ -1,8 +1,8 @@
 #ifndef VENTILATION_FREQUENCY_HPP__
 #define VENTILATION_FREQUENCY_HPP__
 
-#include <chrono>
 #include <ostream>
+#include "ventilation-time.hpp"
 
 namespace ventilation {
 namespace frequency {
@@ -20,9 +20,9 @@ namespace frequency {
                 return Frequency<U>(static_cast<U>(value_));
             }
 
-            std::chrono::duration<Precision>
+            Time<Precision>
             period() const {
-                return std::chrono::duration<Precision>(1.0 / value_);
+                return Time<Precision>(1.0 / value_);
             }
 
             friend std::ostream&

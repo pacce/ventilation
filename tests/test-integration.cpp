@@ -7,8 +7,8 @@
 using F32 = ventilation::Flow<float>;
 using F64 = ventilation::Flow<double>;
 
-using T32 = std::chrono::duration<float>;
-using T64 = std::chrono::duration<double>;
+using T32 = ventilation::Time<float>;
+using T64 = ventilation::Time<double>;
 
 using V32 = ventilation::Volume<float>;
 using V64 = ventilation::Volume<double>;

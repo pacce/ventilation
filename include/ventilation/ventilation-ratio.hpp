@@ -4,12 +4,10 @@
 #include <cmath>
 #include <ostream>
 #include "ventilation-frequency.hpp"
+#include "ventilation-time.hpp"
 
 namespace ventilation {
 namespace ratio {
-    template <typename Precision> using Inspiration = std::chrono::duration<Precision>;
-    template <typename Precision> using Expiration  = std::chrono::duration<Precision>;
-
     template <typename Precision>
     class Ratio {
         static_assert(std::is_floating_point<Precision>::value);
@@ -34,31 +32,31 @@ namespace ratio {
             }
 
             Inspiration<Precision>
-            inspiration(const std::chrono::duration<Precision>& period) const {
+            inspiration(const Time<Precision>& period) const {
                 Precision fraction = ratio_.first / this->total();
-                return std::chrono::duration<Precision>(period.count() * fraction);
+                return Inspiration<Precision>(period.count() * fraction);
             }
 
             Expiration<Precision>
-            expiration(const std::chrono::duration<Precision>& period) const {
+            expiration(const Time<Precision>& period) const {
                 Precision fraction = ratio_.second / this->total();
-                return std::chrono::duration<Precision>(period.count() * fraction);
+                return Expiration<Precision>(period.count() * fraction);
             }
 
             Inspiration<Precision>
             inspiration(const frequency::Frequency<Precision>& f) const {
                 Precision fraction = ratio_.first / this->total();
-                return std::chrono::duration<Precision>(f.period().count() * fraction);
+                return Inspiration<Precision>(f.period().count() * fraction);
             }
 
             Expiration<Precision>
             expiration(const frequency::Frequency<Precision>& f) const {
                 Precision fraction = ratio_.second / this->total();
-                return std::chrono::duration<Precision>(f.period().count() * fraction);
+                return Expiration<Precision>(f.period().count() * fraction);
             }
 
             std::pair<Inspiration<Precision>, Expiration<Precision>>
-            operator()(const std::chrono::duration<Precision>& period) const {
+            operator()(const Time<Precision>& period) const {
                 return std::make_pair(this->inspiration(period), this->expiration(period));
             }
 

@@ -6,13 +6,14 @@
 #include <vector>
 
 #include "ventilation-flow.hpp"
+#include "ventilation-time.hpp"
 #include "ventilation-volume.hpp"
 
 namespace ventilation {
 namespace integration {
     template<typename Precision>
     Volume<Precision>
-    square(const Flow<Precision>& f, const std::chrono::duration<Precision>& t) {
+    square(const Flow<Precision>& f, const Time<Precision>& t) {
         static_assert(std::is_floating_point<Precision>::value);
 
         Precision seconds   = static_cast<Precision>(t.count());
@@ -23,7 +24,7 @@ namespace integration {
 
     template<typename Precision>
     Volume<Precision>
-    squares(const std::vector<Flow<Precision>>& fs, const std::chrono::duration<Precision>& t) {
+    squares(const std::vector<Flow<Precision>>& fs, const Time<Precision>& t) {
         static_assert(std::is_floating_point<Precision>::value);
 
         return std::accumulate(

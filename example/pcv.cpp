@@ -4,39 +4,44 @@
 #include <memory>
 #include <ventilation/ventilation.hpp>
 
+using Control       = ventilation::modes::visitor::Control<double>;
+using Cycle         = ventilation::cycle::Cycle<double>;
+using Elastance     = ventilation::Elastance<double>;
+using Flow          = ventilation::Flow<double>;
+using Lung          = ventilation::lung::Forward<double>;
+using Modes         = ventilation::Modes<double>;
+using Packet        = ventilation::Packet<double>;
+using Peak          = ventilation::pressure::Peak<double>;
+using PEEP          = ventilation::PEEP<double>;
+using Resistance    = ventilation::Resistance<double>;
+using Time          = ventilation::Time<double>;
+using PCV           = ventilation::modes::PCV<double>;
+
 int
 main() {
     using namespace std::chrono_literals;
-    using namespace ventilation::frequency::literals;
 
-    ventilation::Elastance<double>      elastance(1000.0 / 30.0);
-    ventilation::Resistance<double>     resistance(50.0);
-    ventilation::lung::Forward<double>  lung(resistance, elastance);
+    Elastance   elastance(1000.0 / 30.0);
+    Resistance  resistance(50.0);
+    Lung        lung(resistance, elastance);
 
-    std::chrono::duration<double> step          = 100us;
-    std::chrono::duration<double> simulation    = 50s;
-    std::chrono::duration<double> current       = 0s;
+    Time step       = 100us;
+    Time simulation = 50s;
+    Time current    = 0s;
 
-    ventilation::cycle::Cycle<double> cycle(
-              std::chrono::duration<double>(1.0)
-            , std::chrono::duration<double>(0.5)
-            , std::chrono::duration<double>(3.0)
-            , std::chrono::duration<double>(0.5)
-            );
-    ventilation::Modes<double> ventilator = ventilation::modes::PCV<double>(
-            ventilation::PEEP<double>( 5.0)             // PEEP
-            , ventilation::pressure::Peak<double>(20.0) // Peak Pressure
-            , cycle
-            );
-
-    ventilation::modes::visitor::Control<double> control{lung, step};
+    Cycle   cycle(Time(1.0), Time(0.5), Time(3.0), Time(0.5));
+    Modes   ventilator = PCV(PEEP(5.0), Peak(20.0), cycle);
+    Control control{lung, step};
 
     while (true) {
         if (current >= simulation) { break; }
         current += step;
 
-        ventilation::Packet packet = std::visit(control, ventilator);
-        std::cout << std::fixed << std::setprecision(15) << packet << std::endl;
+        std::cout   << std::fixed
+                    << std::setprecision(15)
+                    << std::visit(control, ventilator)
+                    << std::endl
+                    ;
     }
     exit(EXIT_SUCCESS);
 }

@@ -4,11 +4,13 @@
 #include <chrono>
 #include <iostream>
 #include <optional>
+
 #include "ventilation-frequency.hpp"
 #include "ventilation-ratio.hpp"
+#include "ventilation-time.hpp"
 
-namespace ventilation  {
-namespace cycle  {
+namespace ventilation {
+namespace cycle {
     enum class State    {
           INSPIRATION
         , INSPIRATORY_PAUSE
@@ -16,9 +18,6 @@ namespace cycle  {
         , EXPIRATORY_PAUSE
     };
     enum class Mark     { START_OF_EXPIRATION, START_OF_INSPIRATION };
-
-    template <typename Precision>
-    using Time = std::chrono::duration<Precision>;
 
     template <typename Precision>
     class Interval {
@@ -31,12 +30,12 @@ namespace cycle  {
             {}
 
             bool
-            inside(const std::chrono::duration<Precision>& instant) const {
+            inside(const Time<Precision>& instant) const {
                 return (start_ <= instant) and (instant < finish_);
             }
 
             bool
-            outside(const std::chrono::duration<Precision>& instant) const {
+            outside(const Time<Precision>& instant) const {
                 return not inside(instant);
             }
 
@@ -45,9 +44,9 @@ namespace cycle  {
                 return state_;
             }
         private:
-            std::chrono::duration<Precision>    start_;
-            std::chrono::duration<Precision>    finish_;
-            State                               state_;
+            Time<Precision> start_;
+            Time<Precision> finish_;
+            State           state_;
     };
 
     template <typename Precision>
@@ -55,11 +54,11 @@ namespace cycle  {
         static_assert(std::is_floating_point<Precision>::value);
         public:
             Cycle(
-                      const Time<Precision>&                i     // Inspiratory Time
-                    , const std::optional<Time<Precision>>& fst   // Inspiratory Pause
-                    , const Time<Precision>&                e     // Expiratory Time
-                    , const std::optional<Time<Precision>>& snd   // Inspiratory Pause
-                    )
+                      const Inspiration<Precision>&         i
+                    , const inspiratory::Pause<Precision>&  fst
+                    , const Expiration<Precision>&          e
+                    , const expiratory::Pause<Precision>&   snd
+                 )
                 : current_(Precision())
                 , index_(0)
             {
@@ -87,25 +86,15 @@ namespace cycle  {
                 }
             }
 
-            Cycle(
-                      const std::chrono::duration<Precision>& i // Inspiratory Time
-                    , const std::chrono::duration<Precision>& e // Expiratory Time
-                    )
-                : current_(Precision())
-                , index_(0)
-            {
-                using namespace std::chrono_literals;
-
-                intervals_.emplace_back(0s, i    , State::INSPIRATION);
-                intervals_.emplace_back( i, i + e, State::EXPIRATION);
-            }
+            Cycle(const Time<Precision>& i, const Time<Precision>& e) : Cycle(i, {}, e, {})
+            {}
 
             Cycle(const frequency::Frequency<Precision>& f, const ratio::Ratio<Precision>& r)
                 : Cycle(r.inspiration(f), r.expiration(f))
             {}
 
             std::optional<Mark>
-            operator()(const std::chrono::duration<Precision>& step) {
+            operator()(const Time<Precision>& step) {
                 using namespace std::chrono_literals;
 
                 current_ += step;
@@ -114,7 +103,7 @@ namespace cycle  {
                 index_ = (index_ + 1) % intervals_.size();
                 if (index_ == 0) { current_ = 0s; }
 
-                if (intervals_[index_].state() == State::INSPIRATION) {
+                if (this->state() == State::INSPIRATION) {
                     return Mark::START_OF_INSPIRATION;
                 } else if (intervals_[index_].state() == State::EXPIRATION) {
                     return Mark::START_OF_EXPIRATION;
@@ -126,7 +115,8 @@ namespace cycle  {
             State
             state() const { return intervals_[index_].state(); }
         private:
-            std::chrono::duration<Precision>    current_;
+            Time<Precision>                     current_;
+
             std::size_t                         index_;
             std::vector<Interval<Precision>>    intervals_;
     };
