@@ -98,9 +98,18 @@ namespace ventilation {
             operator!=(const Volume<Precision>& lhs, const Volume<Precision>& rhs) {
                 return (lhs <=> rhs) != std::partial_ordering::equivalent;
             }
-        private:
+        protected:
             Precision value_;
     };
+namespace volume {
+    template <typename Precision>
+    class Tidal : public Volume<Precision> {
+        public:
+            explicit Tidal() : Tidal(Precision()) {}
+            explicit Tidal(Precision value) : Volume<Precision>(value) {}
+            explicit Tidal(const Volume<Precision>& p) : Volume<Precision>(p) {}
+    };
+} // namespace volume
 } // namespace ventilation
 
 #endif // VENTILATION_VOLUME_HPP__

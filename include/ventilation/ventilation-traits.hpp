@@ -24,17 +24,29 @@ namespace ventilation {
     template <typename T>
     struct is_pressure_type : std::integral_constant<
                           bool
-                          ,  std::is_same<Pressure<      float>, typename std::remove_cv<T>::type>::value
-                          || std::is_same<Pressure<     double>, typename std::remove_cv<T>::type>::value
-                          || std::is_same<Pressure<long double>, typename std::remove_cv<T>::type>::value
+                          ,  std::is_same<       Pressure<      float>, typename std::remove_cv<T>::type>::value
+                          || std::is_same<       Pressure<     double>, typename std::remove_cv<T>::type>::value
+                          || std::is_same<       Pressure<long double>, typename std::remove_cv<T>::type>::value
+                          || std::is_same<           PEEP<      float>, typename std::remove_cv<T>::type>::value
+                          || std::is_same<           PEEP<     double>, typename std::remove_cv<T>::type>::value
+                          || std::is_same<           PEEP<long double>, typename std::remove_cv<T>::type>::value
+                          || std::is_same< pressure::Peak<      float>, typename std::remove_cv<T>::type>::value
+                          || std::is_same< pressure::Peak<     double>, typename std::remove_cv<T>::type>::value
+                          || std::is_same< pressure::Peak<long double>, typename std::remove_cv<T>::type>::value
+                          || std::is_same<pressure::Delta<      float>, typename std::remove_cv<T>::type>::value
+                          || std::is_same<pressure::Delta<     double>, typename std::remove_cv<T>::type>::value
+                          || std::is_same<pressure::Delta<long double>, typename std::remove_cv<T>::type>::value
                           > {};
 
     template <typename T>
     struct is_volume_type : std::integral_constant<
                           bool
-                          ,  std::is_same<Volume<      float>, typename std::remove_cv<T>::type>::value
-                          || std::is_same<Volume<     double>, typename std::remove_cv<T>::type>::value
-                          || std::is_same<Volume<long double>, typename std::remove_cv<T>::type>::value
+                          ,  std::is_same<       Volume<      float>, typename std::remove_cv<T>::type>::value
+                          || std::is_same<       Volume<     double>, typename std::remove_cv<T>::type>::value
+                          || std::is_same<       Volume<long double>, typename std::remove_cv<T>::type>::value
+                          || std::is_same<volume::Tidal<      float>, typename std::remove_cv<T>::type>::value
+                          || std::is_same<volume::Tidal<     double>, typename std::remove_cv<T>::type>::value
+                          || std::is_same<volume::Tidal<long double>, typename std::remove_cv<T>::type>::value
                           > {};
 
     template <typename T>

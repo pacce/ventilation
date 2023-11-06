@@ -109,11 +109,12 @@ namespace modes {
         public:
             VCV(
                       const PEEP<Precision>&            peep
-                    , const Flow<Precision>&            flow
+                    , const volume::Tidal<Precision>&   tidal
                     , const cycle::Cycle<Precision>&    cycle
                )
                 : cycle_(cycle)
-                , inspiration_(Gain<Flow>(5e-3), Gain<Flow>(6e-3), flow)
+                , offset_(Volume<Precision>())
+                , inspiration_(Gain<Volume>(5e-3), Gain<Volume>(6e-4), tidal)
                 , expiration_(Gain<Pressure>(5e-3), Gain<Pressure>(6e-5), peep)
             {}
 
@@ -122,8 +123,8 @@ namespace modes {
                 return this->stimulate(lung, step);
             }
 
-            void set(const Flow<Precision>& flow) { inspiration_.set(flow); }
-            void set(const PEEP<Precision>& peep) { expiration_.set(peep); }
+            void set(const volume::Tidal<Precision>& tidal) { inspiration_.set(tidal); }
+            void set(const PEEP<Precision>& peep)           { expiration_.set(peep); }
             void set(const cycle::Cycle<Precision>& cycle)  { cycle_ = cycle; }
 
             const cycle::Cycle<Precision>& cycle() const    { return cycle_; }
@@ -133,6 +134,7 @@ namespace modes {
                 std::optional<cycle::Mark> mark = cycle_(step);
                 if (not mark) {
                 } else if (*mark == cycle::Mark::START_OF_INSPIRATION) {
+                    offset_ = current_.volume;
                     inspiration_.clear();
                 } else if (*mark == cycle::Mark::START_OF_EXPIRATION) {
                     expiration_.clear();
@@ -151,9 +153,16 @@ namespace modes {
                 }
             }
 
+            volume::Tidal<Precision>
+            tidal() const {
+                return volume::Tidal(current_.volume - offset_);
+            }
+
             Packet<Precision>
             inspiration(const lung::Forward<Precision>& lung, const Time<Precision>& step) {
-                current_.flow       = inspiration_(current_.flow);
+                Flow<Precision> extreme(10.0);
+                Flow<Precision> actual = inspiration_(this->tidal());
+                current_.flow       = std::min(actual, extreme);
                 current_.volume     += integration::square(current_.flow, step);
                 current_.pressure   = lung(current_.flow, current_.volume);
                 return current_;
@@ -178,7 +187,8 @@ namespace modes {
             Packet<Precision>       current_;
             cycle::Cycle<Precision> cycle_;
 
-            Control<Precision, Flow>        inspiration_;
+            ventilation::Volume<Precision>  offset_;
+            Control<Precision, Volume>      inspiration_;
             Control<Precision, Pressure>    expiration_;
     };
 } // namespace modes

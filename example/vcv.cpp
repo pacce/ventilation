@@ -15,6 +15,7 @@ using Modes         = ventilation::Modes<double>;
 using Packet        = ventilation::Packet<double>;
 using PEEP          = ventilation::PEEP<double>;
 using Resistance    = ventilation::Resistance<double>;
+using Tidal         = ventilation::volume::Tidal<double>;
 using Time          = ventilation::Time<double>;
 using VCV           = ventilation::modes::VCV<double>;
 
@@ -30,8 +31,8 @@ main() {
     Time simulation = 50s;
     Time current    = 0s;
 
-    Cycle   cycle(Time(0.6), Time(0.4), Time(3.2), {});
-    Modes   ventilator = VCV(PEEP(10.0), Flow(1.0), cycle);
+    Cycle   cycle(Time(0.6), {}, Time(3.2), {});
+    Modes   ventilator = VCV(PEEP(10.0), Tidal(0.5), cycle);
     Control control{lung, step};
 
     while (true) {
