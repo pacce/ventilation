@@ -235,11 +235,11 @@ namespace setter {
     };
 
     template <typename Precision>
-    struct Flow {
-        const ventilation::Flow<Precision> flow;
+    struct Tidal {
+        const ventilation::volume::Tidal<Precision> tidal;
 
         void operator()(PCV<Precision>&) const {}
-        void operator()(VCV<Precision>& mode) const { mode.set(flow); }
+        void operator()(VCV<Precision>& mode) const { mode.set(tidal); }
     };
 
     template <typename Precision>
