@@ -62,20 +62,20 @@ namespace ventilation {
     }
 
     Compliance
-    operator*(const Compliance& flow, float scalar) {
+    operator*(const Compliance& compliance, float scalar) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Compliance(static_cast<float>(flow) * scalar);
+        return Compliance(static_cast<float>(compliance) * scalar);
     }
 
     Compliance
-    operator*(float scalar, const Compliance& flow) {
+    operator*(float scalar, const Compliance& compliance) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Compliance(static_cast<float>(flow) * scalar);
+        return Compliance(static_cast<float>(compliance) * scalar);
     }
 
     std::ostream&
-    operator<<(std::ostream& os, const Compliance& flow) {
-        return os << std::format("{:.1f}L/cmH2O", static_cast<float>(flow));
+    operator<<(std::ostream& os, const Compliance& compliance) {
+        return os << std::format("{:.1f}L/cmH2O", static_cast<float>(compliance));
     }
 
     Elastance::Elastance() : value_(0) {}
@@ -139,20 +139,20 @@ namespace ventilation {
     }
 
     Elastance
-    operator*(const Elastance& flow, float scalar) {
+    operator*(const Elastance& elastance, float scalar) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Elastance(static_cast<float>(flow) * scalar);
+        return Elastance(static_cast<float>(elastance) * scalar);
     }
 
     Elastance
-    operator*(float scalar, const Elastance& flow) {
+    operator*(float scalar, const Elastance& elastance) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Elastance(static_cast<float>(flow) * scalar);
+        return Elastance(static_cast<float>(elastance) * scalar);
     }
 
     std::ostream&
-    operator<<(std::ostream& os, const Elastance& flow) {
-        return os << std::format("{:.1f}cmH2O/L", static_cast<float>(flow));
+    operator<<(std::ostream& os, const Elastance& elastance) {
+        return os << std::format("{:.1f}cmH2O/L", static_cast<float>(elastance));
     }
 
     Flow::Flow() : value_(0) {}
@@ -323,20 +323,20 @@ namespace ventilation {
     }
 
     Pressure
-    operator*(const Pressure& flow, float scalar) {
+    operator*(const Pressure& pressure, float scalar) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Pressure(static_cast<float>(flow) * scalar);
+        return Pressure(static_cast<float>(pressure) * scalar);
     }
 
     Pressure
-    operator*(float scalar, const Pressure& flow) {
+    operator*(float scalar, const Pressure& pressure) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Pressure(static_cast<float>(flow) * scalar);
+        return Pressure(static_cast<float>(pressure) * scalar);
     }
 
     std::ostream&
-    operator<<(std::ostream& os, const Pressure& flow) {
-        return os << std::format("{:.1f}cmH2O", static_cast<float>(flow));
+    operator<<(std::ostream& os, const Pressure& pressure) {
+        return os << std::format("{:.1f}cmH2O", static_cast<float>(pressure));
     }
 
     Resistance::Resistance() : value_(0) {}
@@ -400,20 +400,20 @@ namespace ventilation {
     }
 
     Resistance
-    operator*(const Resistance& flow, float scalar) {
+    operator*(const Resistance& resistance, float scalar) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Resistance(static_cast<float>(flow) * scalar);
+        return Resistance(static_cast<float>(resistance) * scalar);
     }
 
     Resistance
-    operator*(float scalar, const Resistance& flow) {
+    operator*(float scalar, const Resistance& resistance) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Resistance(static_cast<float>(flow) * scalar);
+        return Resistance(static_cast<float>(resistance) * scalar);
     }
 
     std::ostream&
-    operator<<(std::ostream& os, const Resistance& flow) {
-        return os << std::format("{:.1f}cmH2O.s/L", static_cast<float>(flow));
+    operator<<(std::ostream& os, const Resistance& resistance) {
+        return os << std::format("{:.1f}cmH2O.s/L", static_cast<float>(resistance));
     }
 
     Volume::Volume() : value_(0) {}
@@ -492,19 +492,19 @@ namespace ventilation {
     }
 
     Volume
-    operator*(const Volume& flow, float scalar) {
+    operator*(const Volume& volume, float scalar) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Volume(static_cast<float>(flow) * scalar);
+        return Volume(static_cast<float>(volume) * scalar);
     }
 
     Volume
-    operator*(float scalar, const Volume& flow) {
+    operator*(float scalar, const Volume& volume) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Volume(static_cast<float>(flow) * scalar);
+        return Volume(static_cast<float>(volume) * scalar);
     }
 
     std::ostream&
-    operator<<(std::ostream& os, const Volume& flow) {
-        return os << std::format("{:.1f}L", static_cast<float>(flow));
+    operator<<(std::ostream& os, const Volume& volume) {
+        return os << std::format("{:.1f}L", static_cast<float>(volume));
     }
 } // namespace ventilation

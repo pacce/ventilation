@@ -40,13 +40,13 @@ namespace ventilation {
             operator>=(const Compliance& lhs, const Compliance& rhs);
 
             friend Compliance
-            operator*(const Compliance& flow, float scalar);
+            operator*(const Compliance& compliance, float scalar);
 
             friend Compliance
-            operator*(float scalar, const Compliance& flow);
+            operator*(float scalar, const Compliance& compliance);
 
             friend std::ostream&
-            operator<<(std::ostream& os, const Compliance& flow);
+            operator<<(std::ostream& os, const Compliance& compliance);
         private:
             Compliance(std::int32_t v);
 
@@ -78,13 +78,13 @@ namespace ventilation {
             operator>=(const Elastance& lhs, const Elastance& rhs);
 
             friend Elastance
-            operator*(const Elastance& flow, float scalar);
+            operator*(const Elastance& elastance, float scalar);
 
             friend Elastance
-            operator*(float scalar, const Elastance& flow);
+            operator*(float scalar, const Elastance& elastance);
 
             friend std::ostream&
-            operator<<(std::ostream& os, const Elastance& flow);
+            operator<<(std::ostream& os, const Elastance& elastance);
         private:
             Elastance(std::int32_t v);
 
@@ -172,13 +172,13 @@ namespace ventilation {
             operator-(const Pressure& lhs, const Pressure& rhs);
 
             friend Pressure
-            operator*(const Pressure& flow, float scalar);
+            operator*(const Pressure& pressure, float scalar);
 
             friend Pressure
-            operator*(float scalar, const Pressure& flow);
+            operator*(float scalar, const Pressure& pressure);
 
             friend std::ostream&
-            operator<<(std::ostream& os, const Pressure& flow);
+            operator<<(std::ostream& os, const Pressure& pressure);
         private:
             Pressure(std::int32_t v);
 
@@ -210,13 +210,13 @@ namespace ventilation {
             operator>=(const Resistance& lhs, const Resistance& rhs);
 
             friend Resistance
-            operator*(const Resistance& flow, float scalar);
+            operator*(const Resistance& resistance, float scalar);
 
             friend Resistance
-            operator*(float scalar, const Resistance& flow);
+            operator*(float scalar, const Resistance& resistance);
 
             friend std::ostream&
-            operator<<(std::ostream& os, const Resistance& flow);
+            operator<<(std::ostream& os, const Resistance& resistance);
         private:
             Resistance(std::int32_t v);
 
@@ -257,13 +257,13 @@ namespace ventilation {
             operator-(const Volume& lhs, const Volume& rhs);
 
             friend Volume
-            operator*(const Volume& flow, float scalar);
+            operator*(const Volume& volume, float scalar);
 
             friend Volume
-            operator*(float scalar, const Volume& flow);
+            operator*(float scalar, const Volume& volume);
 
             friend std::ostream&
-            operator<<(std::ostream& os, const Volume& flow);
+            operator<<(std::ostream& os, const Volume& volume);
         private:
             Volume(std::int32_t v);
 
