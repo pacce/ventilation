@@ -4,7 +4,7 @@ namespace ventilation {
     Compliance::Compliance() : value_(0) {}
     Compliance::Compliance(float v) {
         if (not std::isfinite(v)) {
-            throw std::domain_error("flow value must be finite");
+            throw std::domain_error("compliance value must be finite");
         } else {
             value_ = static_cast<std::int32_t>(v * 1e+3f);
         }
@@ -81,7 +81,7 @@ namespace ventilation {
     Elastance::Elastance() : value_(0) {}
     Elastance::Elastance(float v) {
         if (not std::isfinite(v)) {
-            throw std::domain_error("flow value must be finite");
+            throw std::domain_error("elastance value must be finite");
         } else {
             value_ = static_cast<std::int32_t>(v * 1e+3f);
         }
@@ -342,7 +342,7 @@ namespace ventilation {
     Resistance::Resistance() : value_(0) {}
     Resistance::Resistance(float v) {
         if (not std::isfinite(v)) {
-            throw std::domain_error("flow value must be finite");
+            throw std::domain_error("resistance value must be finite");
         } else {
             value_ = static_cast<std::int32_t>(v * 1e+3f);
         }
@@ -413,7 +413,7 @@ namespace ventilation {
 
     std::ostream&
     operator<<(std::ostream& os, const Resistance& flow) {
-        return os << std::format("{:.1f}L/cmH2O", static_cast<float>(flow));
+        return os << std::format("{:.1f}cmH2O.s/L", static_cast<float>(flow));
     }
 
     Volume::Volume() : value_(0) {}
