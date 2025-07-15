@@ -65,6 +65,15 @@ namespace ventilation {
     operator+(const Flow& lhs, const Flow& rhs) {
         return Flow(lhs.value_ + rhs.value_);
     }
+    Flow
+    operator-(const Flow& lhs) {
+        return Flow(-lhs.value_);
+    }
+
+    Flow
+    operator-(const Flow& lhs, const Flow& rhs) {
+        return Flow(lhs.value_ - rhs.value_);
+    }
 
     std::ostream&
     operator<<(std::ostream& os, const Flow& flow) {

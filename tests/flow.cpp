@@ -83,6 +83,33 @@ RC_GTEST_PROP(
     RC_ASSERT((xs + ys) + zs == (xs + ys + zs));
 }
 
+RC_GTEST_PROP(
+      SUBTRACTION
+    , NEUTRAL
+    , (const ventilation::Flow& xs)
+    ) 
+{
+    RC_ASSERT((xs - ventilation::Flow()) == xs); 
+}
+
+RC_GTEST_PROP(
+      SUBTRACTION
+    , NEGATE
+    , (const ventilation::Flow& xs)
+    ) 
+{
+    RC_ASSERT((ventilation::Flow() - xs) == -xs); 
+}
+
+RC_GTEST_PROP(
+      SUBTRACTION
+    , ANTICOMMUTATIVE
+    , (const ventilation::Flow& xs, const ventilation::Flow& ys)
+    ) 
+{
+    RC_ASSERT((xs - ys) == -(ys - xs)); 
+}
+
 int
 main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

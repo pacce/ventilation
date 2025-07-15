@@ -34,6 +34,12 @@ namespace ventilation {
             friend Flow
             operator+(const Flow& lhs, const Flow& rhs);
 
+            friend Flow
+            operator-(const Flow& lhs);
+
+            friend Flow
+            operator-(const Flow& lhs, const Flow& rhs);
+
             friend std::ostream&
             operator<<(std::ostream& os, const Flow& flow);
         private:
