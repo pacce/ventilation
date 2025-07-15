@@ -339,6 +339,83 @@ namespace ventilation {
         return os << std::format("{:.1f}cmH2O", static_cast<float>(flow));
     }
 
+    Resistance::Resistance() : value_(0) {}
+    Resistance::Resistance(float v) {
+        if (not std::isfinite(v)) {
+            throw std::domain_error("flow value must be finite");
+        } else {
+            value_ = static_cast<std::int32_t>(v * 1e+3f);
+        }
+    }
+
+    Resistance::Resistance(std::int32_t v) : value_(v) {}
+
+    Resistance::operator
+    float() const {
+        return static_cast<float>(value_) * 1e-3f;
+    }
+
+    std::strong_ordering
+    operator<=>(const Resistance& lhs, const Resistance& rhs) {
+        float xs = static_cast<float>(lhs);
+        float ys = static_cast<float>(rhs);
+
+        if (xs == ys) {
+            return std::strong_ordering::equal;
+        } else if (xs < ys) {
+            return std::strong_ordering::less;
+        } else {
+            return std::strong_ordering::greater;
+        }
+    }
+
+    bool
+    operator==(const Resistance& lhs, const Resistance& rhs) {
+        return (lhs <=> rhs) == std::strong_ordering::equal;
+    }
+
+    bool
+    operator!=(const Resistance& lhs, const Resistance& rhs) {
+        return (lhs <=> rhs) != std::strong_ordering::equal;
+    }
+
+    bool
+    operator<(const Resistance& lhs, const Resistance& rhs) {
+        return (lhs <=> rhs) == std::strong_ordering::less;
+    }
+
+    bool
+    operator<=(const Resistance& lhs, const Resistance& rhs) {
+        return (lhs <=> rhs) != std::strong_ordering::greater;
+    }
+
+    bool
+    operator>(const Resistance& lhs, const Resistance& rhs) {
+        return (lhs <=> rhs) == std::strong_ordering::greater;
+    }
+
+    bool
+    operator>=(const Resistance& lhs, const Resistance& rhs) {
+        return (lhs <=> rhs) != std::strong_ordering::less;
+    }
+
+    Resistance
+    operator*(const Resistance& flow, float scalar) {
+        if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
+        return Resistance(static_cast<float>(flow) * scalar);
+    }
+
+    Resistance
+    operator*(float scalar, const Resistance& flow) {
+        if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
+        return Resistance(static_cast<float>(flow) * scalar);
+    }
+
+    std::ostream&
+    operator<<(std::ostream& os, const Resistance& flow) {
+        return os << std::format("{:.1f}L/cmH2O", static_cast<float>(flow));
+    }
+
     Volume::Volume() : value_(0) {}
     Volume::Volume(float v) {
         if (not std::isfinite(v)) {

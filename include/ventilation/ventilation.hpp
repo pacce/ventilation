@@ -12,6 +12,7 @@ namespace ventilation {
     class Elastance;
     class Flow;
     class Pressure;
+    class Resistance;
     class Volume;
 
     class Compliance {
@@ -180,6 +181,44 @@ namespace ventilation {
             operator<<(std::ostream& os, const Pressure& flow);
         private:
             Pressure(std::int32_t v);
+
+            std::int32_t value_;
+    };
+
+    class Resistance {
+        public:
+            Resistance();
+            explicit Resistance(float v);
+            explicit operator float() const;
+
+            friend bool
+            operator==(const Resistance& lhs, const Resistance& rhs);
+
+            friend bool
+            operator!=(const Resistance& lhs, const Resistance& rhs);
+
+            friend bool
+            operator<(const Resistance& lhs, const Resistance& rhs);
+
+            friend bool
+            operator<=(const Resistance& lhs, const Resistance& rhs);
+
+            friend bool
+            operator>(const Resistance& lhs, const Resistance& rhs);
+
+            friend bool
+            operator>=(const Resistance& lhs, const Resistance& rhs);
+
+            friend Resistance
+            operator*(const Resistance& flow, float scalar);
+
+            friend Resistance
+            operator*(float scalar, const Resistance& flow);
+
+            friend std::ostream&
+            operator<<(std::ostream& os, const Resistance& flow);
+        private:
+            Resistance(std::int32_t v);
 
             std::int32_t value_;
     };
