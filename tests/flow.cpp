@@ -58,7 +58,7 @@ TEST(COMPARISON, GE) {
 
 RC_GTEST_PROP(
       ADDITION
-    , NEUTRAL
+    , IDENTITY
     , (const ventilation::Flow& xs)
     ) 
 {
@@ -108,6 +108,62 @@ RC_GTEST_PROP(
     ) 
 {
     RC_ASSERT((xs - ys) == -(ys - xs)); 
+}
+
+RC_GTEST_PROP(
+      MULTIPLICATION
+    , IDENTITY
+    , (const ventilation::Flow& xs)
+    ) 
+{
+    RC_ASSERT((xs * 1.0f) == xs); 
+    RC_ASSERT((1.0f * xs) == xs); 
+}
+
+RC_GTEST_PROP(
+      MULTIPLICATION
+    , DEFINITION
+    , (const ventilation::Flow& xs)
+    ) 
+{
+    RC_ASSERT((xs * 2.0f) == (xs + xs)); 
+    RC_ASSERT((2.0f * xs) == (xs + xs)); 
+}
+
+RC_GTEST_PROP(
+      MULTIPLICATION
+    , ZERO
+    , (const ventilation::Flow& xs)
+    ) 
+{
+    RC_ASSERT((xs * 0.0f) == ventilation::Flow()); 
+    RC_ASSERT((0.0f * xs) == ventilation::Flow()); 
+}
+
+RC_GTEST_PROP(
+      MULTIPLICATION
+    , COMMUTATIVE
+    , (const ventilation::Flow& xs, float scalar)
+    ) 
+{
+    RC_PRE(std::isfinite(scalar));
+    RC_ASSERT((xs * scalar) == (scalar * xs));
+}
+
+TEST(MULTIPLICATION, EXCEPTION) {
+    ventilation::Flow flow;
+    EXPECT_ANY_THROW(
+            flow * std::numeric_limits<float>::quiet_NaN()
+            );
+    EXPECT_ANY_THROW(
+            std::numeric_limits<float>::quiet_NaN() * flow
+            );
+    EXPECT_ANY_THROW(
+            flow * std::numeric_limits<float>::infinity()
+            );
+    EXPECT_ANY_THROW(
+            std::numeric_limits<float>::infinity() * flow
+            );
 }
 
 int

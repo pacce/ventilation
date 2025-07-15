@@ -75,6 +75,18 @@ namespace ventilation {
         return Flow(lhs.value_ - rhs.value_);
     }
 
+    Flow
+    operator*(const Flow& flow, float scalar) {
+        if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
+        return Flow(static_cast<float>(flow) * scalar);
+    }
+
+    Flow
+    operator*(float scalar, const Flow& flow) {
+        if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
+        return Flow(static_cast<float>(flow) * scalar);
+    }
+
     std::ostream&
     operator<<(std::ostream& os, const Flow& flow) {
         return os << std::format("{:.1f}L/s", static_cast<float>(flow));
