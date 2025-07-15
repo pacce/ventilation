@@ -91,4 +91,95 @@ namespace ventilation {
     operator<<(std::ostream& os, const Flow& flow) {
         return os << std::format("{:.1f}L/s", static_cast<float>(flow));
     }
+
+    Pressure::Pressure() : value_(0) {}
+    Pressure::Pressure(float v) {
+        if (not std::isfinite(v)) { 
+            throw std::domain_error("pressure value must be finite"); 
+        } else {
+            value_ = static_cast<std::int32_t>(v * 1e+3f);
+        }
+    }
+
+    Pressure::Pressure(std::int32_t v) : value_(v) {}
+
+    Pressure::operator
+    float() const {
+        return static_cast<float>(value_) * 1e-3f;
+    }
+
+    std::strong_ordering
+    operator<=>(const Pressure& lhs, const Pressure& rhs) {
+        float xs = static_cast<float>(lhs);
+        float ys = static_cast<float>(rhs);
+
+        if (xs == ys) {
+            return std::strong_ordering::equal;
+        } else if (xs < ys) {
+            return std::strong_ordering::less;
+        } else {
+            return std::strong_ordering::greater;
+        }
+    }
+
+    bool
+    operator==(const Pressure& lhs, const Pressure& rhs) {
+        return (lhs <=> rhs) == std::strong_ordering::equal;
+    }
+
+    bool
+    operator!=(const Pressure& lhs, const Pressure& rhs) {
+        return (lhs <=> rhs) != std::strong_ordering::equal;
+    }
+
+    bool
+    operator<(const Pressure& lhs, const Pressure& rhs) {
+        return (lhs <=> rhs) == std::strong_ordering::less;
+    }
+
+    bool
+    operator<=(const Pressure& lhs, const Pressure& rhs) {
+        return (lhs <=> rhs) != std::strong_ordering::greater;
+    }
+
+    bool
+    operator>(const Pressure& lhs, const Pressure& rhs) {
+        return (lhs <=> rhs) == std::strong_ordering::greater;
+    }
+
+    bool
+    operator>=(const Pressure& lhs, const Pressure& rhs) {
+        return (lhs <=> rhs) != std::strong_ordering::less;
+    }
+
+    Pressure
+    operator+(const Pressure& lhs, const Pressure& rhs) {
+        return Pressure(lhs.value_ + rhs.value_);
+    }
+    Pressure
+    operator-(const Pressure& lhs) {
+        return Pressure(-lhs.value_);
+    }
+
+    Pressure
+    operator-(const Pressure& lhs, const Pressure& rhs) {
+        return Pressure(lhs.value_ - rhs.value_);
+    }
+
+    Pressure
+    operator*(const Pressure& flow, float scalar) {
+        if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
+        return Pressure(static_cast<float>(flow) * scalar);
+    }
+
+    Pressure
+    operator*(float scalar, const Pressure& flow) {
+        if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
+        return Pressure(static_cast<float>(flow) * scalar);
+    }
+
+    std::ostream&
+    operator<<(std::ostream& os, const Pressure& flow) {
+        return os << std::format("{:.1f}cmH2O", static_cast<float>(flow));
+    }
 } // namespace ventilation
