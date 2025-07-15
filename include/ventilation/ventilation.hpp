@@ -100,6 +100,53 @@ namespace ventilation {
 
             std::int32_t value_;
     };
+
+    class Volume {
+        public:
+            Volume();
+            explicit Volume(float v);
+            explicit operator float() const;
+
+            friend bool
+            operator==(const Volume& lhs, const Volume& rhs);
+
+            friend bool
+            operator!=(const Volume& lhs, const Volume& rhs);
+
+            friend bool
+            operator<(const Volume& lhs, const Volume& rhs);
+
+            friend bool
+            operator<=(const Volume& lhs, const Volume& rhs);
+
+            friend bool
+            operator>(const Volume& lhs, const Volume& rhs);
+
+            friend bool
+            operator>=(const Volume& lhs, const Volume& rhs);
+
+            friend Volume
+            operator+(const Volume& lhs, const Volume& rhs);
+
+            friend Volume
+            operator-(const Volume& lhs);
+
+            friend Volume
+            operator-(const Volume& lhs, const Volume& rhs);
+
+            friend Volume
+            operator*(const Volume& flow, float scalar);
+
+            friend Volume
+            operator*(float scalar, const Volume& flow);
+
+            friend std::ostream&
+            operator<<(std::ostream& os, const Volume& flow);
+        private:
+            Volume(std::int32_t v);
+
+            std::int32_t value_;
+    };
 } // namespace ventilation
 
 #endif // VENTILATION_HPP__

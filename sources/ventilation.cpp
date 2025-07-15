@@ -182,4 +182,95 @@ namespace ventilation {
     operator<<(std::ostream& os, const Pressure& flow) {
         return os << std::format("{:.1f}cmH2O", static_cast<float>(flow));
     }
+
+    Volume::Volume() : value_(0) {}
+    Volume::Volume(float v) {
+        if (not std::isfinite(v)) { 
+            throw std::domain_error("volume value must be finite"); 
+        } else {
+            value_ = static_cast<std::int32_t>(v * 1e+3f);
+        }
+    }
+
+    Volume::Volume(std::int32_t v) : value_(v) {}
+
+    Volume::operator
+    float() const {
+        return static_cast<float>(value_) * 1e-3f;
+    }
+
+    std::strong_ordering
+    operator<=>(const Volume& lhs, const Volume& rhs) {
+        float xs = static_cast<float>(lhs);
+        float ys = static_cast<float>(rhs);
+
+        if (xs == ys) {
+            return std::strong_ordering::equal;
+        } else if (xs < ys) {
+            return std::strong_ordering::less;
+        } else {
+            return std::strong_ordering::greater;
+        }
+    }
+
+    bool
+    operator==(const Volume& lhs, const Volume& rhs) {
+        return (lhs <=> rhs) == std::strong_ordering::equal;
+    }
+
+    bool
+    operator!=(const Volume& lhs, const Volume& rhs) {
+        return (lhs <=> rhs) != std::strong_ordering::equal;
+    }
+
+    bool
+    operator<(const Volume& lhs, const Volume& rhs) {
+        return (lhs <=> rhs) == std::strong_ordering::less;
+    }
+
+    bool
+    operator<=(const Volume& lhs, const Volume& rhs) {
+        return (lhs <=> rhs) != std::strong_ordering::greater;
+    }
+
+    bool
+    operator>(const Volume& lhs, const Volume& rhs) {
+        return (lhs <=> rhs) == std::strong_ordering::greater;
+    }
+
+    bool
+    operator>=(const Volume& lhs, const Volume& rhs) {
+        return (lhs <=> rhs) != std::strong_ordering::less;
+    }
+
+    Volume
+    operator+(const Volume& lhs, const Volume& rhs) {
+        return Volume(lhs.value_ + rhs.value_);
+    }
+    Volume
+    operator-(const Volume& lhs) {
+        return Volume(-lhs.value_);
+    }
+
+    Volume
+    operator-(const Volume& lhs, const Volume& rhs) {
+        return Volume(lhs.value_ - rhs.value_);
+    }
+
+    Volume
+    operator*(const Volume& flow, float scalar) {
+        if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
+        return Volume(static_cast<float>(flow) * scalar);
+    }
+
+    Volume
+    operator*(float scalar, const Volume& flow) {
+        if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
+        return Volume(static_cast<float>(flow) * scalar);
+    }
+
+    std::ostream&
+    operator<<(std::ostream& os, const Volume& flow) {
+        return os << std::format("{:.1f}L", static_cast<float>(flow));
+    }
 } // namespace ventilation
