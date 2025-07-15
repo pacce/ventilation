@@ -21,6 +21,9 @@ namespace ventilation {
             explicit Compliance(float v);
             explicit operator float() const;
 
+            friend std::strong_ordering
+            operator<=>(const Compliance& lhs, const Compliance& rhs);
+
             friend bool
             operator==(const Compliance& lhs, const Compliance& rhs);
 
@@ -48,9 +51,10 @@ namespace ventilation {
             friend std::ostream&
             operator<<(std::ostream& os, const Compliance& compliance);
         private:
-            Compliance(std::int32_t v);
 
-            std::int32_t value_;
+            Compliance(std::int64_t v);
+
+            std::int64_t value_;
     };
 
     class Elastance {
@@ -58,6 +62,9 @@ namespace ventilation {
             Elastance();
             explicit Elastance(float v);
             explicit operator float() const;
+
+            friend std::strong_ordering
+            operator<=>(const Elastance& lhs, const Elastance& rhs);
 
             friend bool
             operator==(const Elastance& lhs, const Elastance& rhs);
@@ -86,9 +93,9 @@ namespace ventilation {
             friend std::ostream&
             operator<<(std::ostream& os, const Elastance& elastance);
         private:
-            Elastance(std::int32_t v);
+            Elastance(std::int64_t v);
 
-            std::int32_t value_;
+            std::int64_t value_;
     };
 
     class Flow {
@@ -96,6 +103,9 @@ namespace ventilation {
             Flow();
             explicit Flow(float v);
             explicit operator float() const;
+
+            friend std::strong_ordering
+            operator<=>(const Flow& lhs, const Flow& rhs);
 
             friend bool
             operator==(const Flow& lhs, const Flow& rhs);
@@ -133,9 +143,9 @@ namespace ventilation {
             friend std::ostream&
             operator<<(std::ostream& os, const Flow& flow);
         private:
-            Flow(std::int32_t v);
+            Flow(std::int64_t v);
 
-            std::int32_t value_;
+            std::int64_t value_;
     };
 
     class Pressure {
@@ -143,6 +153,9 @@ namespace ventilation {
             Pressure();
             explicit Pressure(float v);
             explicit operator float() const;
+
+            friend std::strong_ordering
+            operator<=>(const Pressure& lhs, const Pressure& rhs);
 
             friend bool
             operator==(const Pressure& lhs, const Pressure& rhs);
@@ -180,9 +193,9 @@ namespace ventilation {
             friend std::ostream&
             operator<<(std::ostream& os, const Pressure& pressure);
         private:
-            Pressure(std::int32_t v);
+            Pressure(std::int64_t v);
 
-            std::int32_t value_;
+            std::int64_t value_;
     };
 
     class Resistance {
@@ -190,6 +203,9 @@ namespace ventilation {
             Resistance();
             explicit Resistance(float v);
             explicit operator float() const;
+
+            friend std::strong_ordering
+            operator<=>(const Resistance& lhs, const Resistance& rhs);
 
             friend bool
             operator==(const Resistance& lhs, const Resistance& rhs);
@@ -218,9 +234,9 @@ namespace ventilation {
             friend std::ostream&
             operator<<(std::ostream& os, const Resistance& resistance);
         private:
-            Resistance(std::int32_t v);
+            Resistance(std::int64_t v);
 
-            std::int32_t value_;
+            std::int64_t value_;
     };
 
     class Volume {
@@ -228,6 +244,9 @@ namespace ventilation {
             Volume();
             explicit Volume(float v);
             explicit operator float() const;
+
+            friend std::strong_ordering
+            operator<=>(const Volume& lhs, const Volume& rhs);
 
             friend bool
             operator==(const Volume& lhs, const Volume& rhs);
@@ -265,9 +284,9 @@ namespace ventilation {
             friend std::ostream&
             operator<<(std::ostream& os, const Volume& volume);
         private:
-            Volume(std::int32_t v);
+            Volume(std::int64_t v);
 
-            std::int32_t value_;
+            std::int64_t value_;
     };
 } // namespace ventilation
 

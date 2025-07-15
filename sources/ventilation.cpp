@@ -1,34 +1,34 @@
 #include "ventilation/ventilation.hpp"
+#include <iostream>
 
 namespace ventilation {
+namespace fixed {
+    const float FORWARD             = 1e+6f;
+    const float INVERSE             = 1e-6f;
+    const std::int64_t PRECISION    = 1000;
+} // namespace fixed
     Compliance::Compliance() : value_(0) {}
     Compliance::Compliance(float v) {
         if (not std::isfinite(v)) {
             throw std::domain_error("compliance value must be finite");
         } else {
-            value_ = static_cast<std::int32_t>(v * 1e+3f);
+            value_ = static_cast<std::int64_t>(v * fixed::FORWARD);
         }
     }
 
-    Compliance::Compliance(std::int32_t v) : value_(v) {}
+    Compliance::Compliance(std::int64_t v) : value_(v) {}
 
     Compliance::operator
     float() const {
-        return static_cast<float>(value_) * 1e-3f;
+        return static_cast<float>(value_) * fixed::INVERSE;
     }
 
     std::strong_ordering
     operator<=>(const Compliance& lhs, const Compliance& rhs) {
-        float xs = static_cast<float>(lhs);
-        float ys = static_cast<float>(rhs);
+        std::int64_t xs = lhs.value_ / fixed::PRECISION;
+        std::int64_t ys = rhs.value_ / fixed::PRECISION;
 
-        if (xs == ys) {
-            return std::strong_ordering::equal;
-        } else if (xs < ys) {
-            return std::strong_ordering::less;
-        } else {
-            return std::strong_ordering::greater;
-        }
+        return (xs <=> ys);
     }
 
     bool
@@ -64,13 +64,19 @@ namespace ventilation {
     Compliance
     operator*(const Compliance& compliance, float scalar) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Compliance(static_cast<float>(compliance) * scalar);
+        std::int64_t forward    = static_cast<std::int64_t>(fixed::FORWARD);
+        std::int64_t converted  = static_cast<std::int64_t>(scalar * forward);
+
+        return Compliance((compliance.value_ * converted) / forward);
     }
 
     Compliance
     operator*(float scalar, const Compliance& compliance) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Compliance(static_cast<float>(compliance) * scalar);
+        std::int64_t forward    = static_cast<std::int64_t>(fixed::FORWARD);
+        std::int64_t converted  = static_cast<std::int64_t>(scalar * forward);
+
+        return Compliance((compliance.value_ * converted) / forward);
     }
 
     std::ostream&
@@ -83,29 +89,23 @@ namespace ventilation {
         if (not std::isfinite(v)) {
             throw std::domain_error("elastance value must be finite");
         } else {
-            value_ = static_cast<std::int32_t>(v * 1e+3f);
+            value_ = static_cast<std::int64_t>(v * fixed::FORWARD);
         }
     }
 
-    Elastance::Elastance(std::int32_t v) : value_(v) {}
+    Elastance::Elastance(std::int64_t v) : value_(v) {}
 
     Elastance::operator
     float() const {
-        return static_cast<float>(value_) * 1e-3f;
+        return static_cast<float>(value_) * fixed::INVERSE;
     }
 
     std::strong_ordering
     operator<=>(const Elastance& lhs, const Elastance& rhs) {
-        float xs = static_cast<float>(lhs);
-        float ys = static_cast<float>(rhs);
+        std::int64_t xs = lhs.value_ / fixed::PRECISION;
+        std::int64_t ys = rhs.value_ / fixed::PRECISION;
 
-        if (xs == ys) {
-            return std::strong_ordering::equal;
-        } else if (xs < ys) {
-            return std::strong_ordering::less;
-        } else {
-            return std::strong_ordering::greater;
-        }
+        return (xs <=> ys);
     }
 
     bool
@@ -141,13 +141,19 @@ namespace ventilation {
     Elastance
     operator*(const Elastance& elastance, float scalar) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Elastance(static_cast<float>(elastance) * scalar);
+        std::int64_t forward    = static_cast<std::int64_t>(fixed::FORWARD);
+        std::int64_t converted  = static_cast<std::int64_t>(scalar * forward);
+
+        return Elastance((elastance.value_ * converted) / forward);
     }
 
     Elastance
     operator*(float scalar, const Elastance& elastance) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Elastance(static_cast<float>(elastance) * scalar);
+        std::int64_t forward    = static_cast<std::int64_t>(fixed::FORWARD);
+        std::int64_t converted  = static_cast<std::int64_t>(scalar * forward);
+
+        return Elastance((elastance.value_ * converted) / forward);
     }
 
     std::ostream&
@@ -160,29 +166,23 @@ namespace ventilation {
         if (not std::isfinite(v)) {
             throw std::domain_error("flow value must be finite");
         } else {
-            value_ = static_cast<std::int32_t>(v * 1e+3f);
+            value_ = static_cast<std::int64_t>(v * fixed::FORWARD);
         }
     }
 
-    Flow::Flow(std::int32_t v) : value_(v) {}
+    Flow::Flow(std::int64_t v) : value_(v) {}
 
     Flow::operator
     float() const {
-        return static_cast<float>(value_) * 1e-3f;
+        return static_cast<float>(value_) * fixed::INVERSE;
     }
 
     std::strong_ordering
     operator<=>(const Flow& lhs, const Flow& rhs) {
-        float xs = static_cast<float>(lhs);
-        float ys = static_cast<float>(rhs);
+        std::int64_t xs = lhs.value_ / fixed::PRECISION;
+        std::int64_t ys = rhs.value_ / fixed::PRECISION;
 
-        if (xs == ys) {
-            return std::strong_ordering::equal;
-        } else if (xs < ys) {
-            return std::strong_ordering::less;
-        } else {
-            return std::strong_ordering::greater;
-        }
+        return (xs <=> ys);
     }
 
     bool
@@ -233,13 +233,19 @@ namespace ventilation {
     Flow
     operator*(const Flow& flow, float scalar) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Flow(static_cast<float>(flow) * scalar);
+        std::int64_t forward    = static_cast<std::int64_t>(fixed::FORWARD);
+        std::int64_t converted  = static_cast<std::int64_t>(scalar * forward);
+
+        return Flow((flow.value_ * converted) / forward);
     }
 
     Flow
     operator*(float scalar, const Flow& flow) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Flow(static_cast<float>(flow) * scalar);
+        std::int64_t forward    = static_cast<std::int64_t>(fixed::FORWARD);
+        std::int64_t converted  = static_cast<std::int64_t>(scalar * forward);
+
+        return Flow((flow.value_ * converted) / forward);
     }
 
     std::ostream&
@@ -252,29 +258,23 @@ namespace ventilation {
         if (not std::isfinite(v)) {
             throw std::domain_error("pressure value must be finite");
         } else {
-            value_ = static_cast<std::int32_t>(v * 1e+3f);
+            value_ = static_cast<std::int64_t>(v * fixed::FORWARD);
         }
     }
 
-    Pressure::Pressure(std::int32_t v) : value_(v) {}
+    Pressure::Pressure(std::int64_t v) : value_(v) {}
 
     Pressure::operator
     float() const {
-        return static_cast<float>(value_) * 1e-3f;
+        return static_cast<float>(value_) * fixed::INVERSE;
     }
 
     std::strong_ordering
     operator<=>(const Pressure& lhs, const Pressure& rhs) {
-        float xs = static_cast<float>(lhs);
-        float ys = static_cast<float>(rhs);
+        std::int64_t xs = lhs.value_ / fixed::PRECISION;
+        std::int64_t ys = rhs.value_ / fixed::PRECISION;
 
-        if (xs == ys) {
-            return std::strong_ordering::equal;
-        } else if (xs < ys) {
-            return std::strong_ordering::less;
-        } else {
-            return std::strong_ordering::greater;
-        }
+        return (xs <=> ys);
     }
 
     bool
@@ -325,13 +325,19 @@ namespace ventilation {
     Pressure
     operator*(const Pressure& pressure, float scalar) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Pressure(static_cast<float>(pressure) * scalar);
+        std::int64_t forward    = static_cast<std::int64_t>(fixed::FORWARD);
+        std::int64_t converted  = static_cast<std::int64_t>(scalar * forward);
+
+        return Pressure((pressure.value_ * converted) / forward);
     }
 
     Pressure
     operator*(float scalar, const Pressure& pressure) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Pressure(static_cast<float>(pressure) * scalar);
+        std::int64_t forward    = static_cast<std::int64_t>(fixed::FORWARD);
+        std::int64_t converted  = static_cast<std::int64_t>(scalar * forward);
+
+        return Pressure((pressure.value_ * converted) / forward);
     }
 
     std::ostream&
@@ -344,29 +350,23 @@ namespace ventilation {
         if (not std::isfinite(v)) {
             throw std::domain_error("resistance value must be finite");
         } else {
-            value_ = static_cast<std::int32_t>(v * 1e+3f);
+            value_ = static_cast<std::int64_t>(v * fixed::FORWARD);
         }
     }
 
-    Resistance::Resistance(std::int32_t v) : value_(v) {}
+    Resistance::Resistance(std::int64_t v) : value_(v) {}
 
     Resistance::operator
     float() const {
-        return static_cast<float>(value_) * 1e-3f;
+        return static_cast<float>(value_) * fixed::INVERSE;
     }
 
     std::strong_ordering
     operator<=>(const Resistance& lhs, const Resistance& rhs) {
-        float xs = static_cast<float>(lhs);
-        float ys = static_cast<float>(rhs);
+        std::int64_t xs = lhs.value_ / fixed::PRECISION;
+        std::int64_t ys = rhs.value_ / fixed::PRECISION;
 
-        if (xs == ys) {
-            return std::strong_ordering::equal;
-        } else if (xs < ys) {
-            return std::strong_ordering::less;
-        } else {
-            return std::strong_ordering::greater;
-        }
+        return (xs <=> ys);
     }
 
     bool
@@ -402,13 +402,19 @@ namespace ventilation {
     Resistance
     operator*(const Resistance& resistance, float scalar) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Resistance(static_cast<float>(resistance) * scalar);
+        std::int64_t forward    = static_cast<std::int64_t>(fixed::FORWARD);
+        std::int64_t converted  = static_cast<std::int64_t>(scalar * forward);
+
+        return Resistance((resistance.value_ * converted) / forward);
     }
 
     Resistance
     operator*(float scalar, const Resistance& resistance) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Resistance(static_cast<float>(resistance) * scalar);
+        std::int64_t forward    = static_cast<std::int64_t>(fixed::FORWARD);
+        std::int64_t converted  = static_cast<std::int64_t>(scalar * forward);
+
+        return Resistance((resistance.value_ * converted) / forward);
     }
 
     std::ostream&
@@ -421,29 +427,23 @@ namespace ventilation {
         if (not std::isfinite(v)) {
             throw std::domain_error("volume value must be finite");
         } else {
-            value_ = static_cast<std::int32_t>(v * 1e+3f);
+            value_ = static_cast<std::int64_t>(v * fixed::FORWARD);
         }
     }
 
-    Volume::Volume(std::int32_t v) : value_(v) {}
+    Volume::Volume(std::int64_t v) : value_(v) {}
 
     Volume::operator
     float() const {
-        return static_cast<float>(value_) * 1e-3f;
+        return static_cast<float>(value_) * fixed::INVERSE;
     }
 
     std::strong_ordering
     operator<=>(const Volume& lhs, const Volume& rhs) {
-        float xs = static_cast<float>(lhs);
-        float ys = static_cast<float>(rhs);
+        std::int64_t xs = lhs.value_ / fixed::PRECISION;
+        std::int64_t ys = rhs.value_ / fixed::PRECISION;
 
-        if (xs == ys) {
-            return std::strong_ordering::equal;
-        } else if (xs < ys) {
-            return std::strong_ordering::less;
-        } else {
-            return std::strong_ordering::greater;
-        }
+        return (xs <=> ys); 
     }
 
     bool
@@ -494,13 +494,19 @@ namespace ventilation {
     Volume
     operator*(const Volume& volume, float scalar) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Volume(static_cast<float>(volume) * scalar);
+        std::int64_t forward    = static_cast<std::int64_t>(fixed::FORWARD);
+        std::int64_t converted  = static_cast<std::int64_t>(scalar * forward);
+
+        return Volume((volume.value_ * converted) / forward);
     }
 
     Volume
     operator*(float scalar, const Volume& volume) {
         if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
-        return Volume(static_cast<float>(volume) * scalar);
+        std::int64_t forward    = static_cast<std::int64_t>(fixed::FORWARD);
+        std::int64_t converted  = static_cast<std::int64_t>(scalar * forward);
+
+        return Volume((volume.value_ * converted) / forward);
     }
 
     std::ostream&

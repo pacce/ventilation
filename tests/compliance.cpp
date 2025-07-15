@@ -56,6 +56,52 @@ TEST(COMPARISON, GE) {
     EXPECT_GE(ventilation::Compliance(2.0f), ventilation::Compliance(1.0f));
 }
 
+RC_GTEST_PROP(
+      MULTIPLICATION
+    , IDENTITY
+    , (const ventilation::Compliance& xs)
+    ) 
+{
+    RC_ASSERT((xs * 1.0f) == xs); 
+    RC_ASSERT((1.0f * xs) == xs); 
+}
+
+RC_GTEST_PROP(
+      MULTIPLICATION
+    , ZERO
+    , (const ventilation::Compliance& xs)
+    ) 
+{
+    RC_ASSERT((xs * 0.0f) == ventilation::Compliance()); 
+    RC_ASSERT((0.0f * xs) == ventilation::Compliance()); 
+}
+
+RC_GTEST_PROP(
+      MULTIPLICATION
+    , COMMUTATIVE
+    , (const ventilation::Compliance& xs, float scalar)
+    ) 
+{
+    RC_PRE(std::isfinite(scalar));
+    RC_ASSERT((xs * scalar) == (scalar * xs));
+}
+
+TEST(MULTIPLICATION, EXCEPTION) {
+    ventilation::Compliance compliance;
+    EXPECT_ANY_THROW(
+            compliance * std::numeric_limits<float>::quiet_NaN()
+            );
+    EXPECT_ANY_THROW(
+            std::numeric_limits<float>::quiet_NaN() * compliance
+            );
+    EXPECT_ANY_THROW(
+            compliance * std::numeric_limits<float>::infinity()
+            );
+    EXPECT_ANY_THROW(
+            std::numeric_limits<float>::infinity() * compliance
+            );
+}
+
 int
 main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

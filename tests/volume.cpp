@@ -60,16 +60,16 @@ RC_GTEST_PROP(
       ADDITION
     , IDENTITY
     , (const ventilation::Volume& xs)
-    ) 
+    )
 {
-    RC_ASSERT((xs + ventilation::Volume()) == xs); 
+    RC_ASSERT((xs + ventilation::Volume()) == xs);
 }
 
 RC_GTEST_PROP(
       ADDITION
     , COMMUTATIVE
     , (const ventilation::Volume& xs, const ventilation::Volume& ys)
-    ) 
+    )
 {
     RC_ASSERT((xs + ys) == (ys + xs));
 }
@@ -78,7 +78,7 @@ RC_GTEST_PROP(
       ADDITION
     , ASSOCIATIVE
     , (const ventilation::Volume& xs, const ventilation::Volume& ys, const ventilation::Volume& zs)
-    ) 
+    )
 {
     RC_ASSERT((xs + ys) + zs == (xs + ys + zs));
 }
@@ -87,64 +87,64 @@ RC_GTEST_PROP(
       SUBTRACTION
     , NEUTRAL
     , (const ventilation::Volume& xs)
-    ) 
+    )
 {
-    RC_ASSERT((xs - ventilation::Volume()) == xs); 
+    RC_ASSERT((xs - ventilation::Volume()) == xs);
 }
 
 RC_GTEST_PROP(
       SUBTRACTION
     , NEGATE
     , (const ventilation::Volume& xs)
-    ) 
+    )
 {
-    RC_ASSERT((ventilation::Volume() - xs) == -xs); 
+    RC_ASSERT((ventilation::Volume() - xs) == -xs);
 }
 
 RC_GTEST_PROP(
       SUBTRACTION
     , ANTICOMMUTATIVE
     , (const ventilation::Volume& xs, const ventilation::Volume& ys)
-    ) 
+    )
 {
-    RC_ASSERT((xs - ys) == -(ys - xs)); 
+    RC_ASSERT((xs - ys) == -(ys - xs));
 }
 
 RC_GTEST_PROP(
       MULTIPLICATION
     , IDENTITY
     , (const ventilation::Volume& xs)
-    ) 
+    )
 {
-    RC_ASSERT((xs * 1.0f) == xs); 
-    RC_ASSERT((1.0f * xs) == xs); 
+    RC_ASSERT((xs * 1.0f) == xs);
+    RC_ASSERT((1.0f * xs) == xs);
 }
 
 RC_GTEST_PROP(
       MULTIPLICATION
     , DEFINITION
     , (const ventilation::Volume& xs)
-    ) 
+    )
 {
-    RC_ASSERT((xs * 2.0f) == (xs + xs)); 
-    RC_ASSERT((2.0f * xs) == (xs + xs)); 
+    RC_ASSERT((xs * 2.0f) == (xs + xs));
+    RC_ASSERT((2.0f * xs) == (xs + xs));
 }
 
 RC_GTEST_PROP(
       MULTIPLICATION
     , ZERO
     , (const ventilation::Volume& xs)
-    ) 
+    )
 {
-    RC_ASSERT((xs * 0.0f) == ventilation::Volume()); 
-    RC_ASSERT((0.0f * xs) == ventilation::Volume()); 
+    RC_ASSERT((xs * 0.0f) == ventilation::Volume());
+    RC_ASSERT((0.0f * xs) == ventilation::Volume());
 }
 
 RC_GTEST_PROP(
       MULTIPLICATION
     , COMMUTATIVE
     , (const ventilation::Volume& xs, float scalar)
-    ) 
+    )
 {
     RC_PRE(std::isfinite(scalar));
     RC_ASSERT((xs * scalar) == (scalar * xs));
