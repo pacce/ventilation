@@ -151,18 +151,18 @@ RC_GTEST_PROP(
 }
 
 TEST(MULTIPLICATION, EXCEPTION) {
-    ventilation::Volume flow;
+    ventilation::Volume volume;
     EXPECT_ANY_THROW(
-            flow * std::numeric_limits<float>::quiet_NaN()
+            volume * std::numeric_limits<float>::quiet_NaN()
             );
     EXPECT_ANY_THROW(
-            std::numeric_limits<float>::quiet_NaN() * flow
+            std::numeric_limits<float>::quiet_NaN() * volume
             );
     EXPECT_ANY_THROW(
-            flow * std::numeric_limits<float>::infinity()
+            volume * std::numeric_limits<float>::infinity()
             );
     EXPECT_ANY_THROW(
-            std::numeric_limits<float>::infinity() * flow
+            std::numeric_limits<float>::infinity() * volume
             );
 }
 

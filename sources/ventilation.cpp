@@ -1,10 +1,164 @@
 #include "ventilation/ventilation.hpp"
 
 namespace ventilation {
+    Compliance::Compliance() : value_(0) {}
+    Compliance::Compliance(float v) {
+        if (not std::isfinite(v)) {
+            throw std::domain_error("flow value must be finite");
+        } else {
+            value_ = static_cast<std::int32_t>(v * 1e+3f);
+        }
+    }
+
+    Compliance::Compliance(std::int32_t v) : value_(v) {}
+
+    Compliance::operator
+    float() const {
+        return static_cast<float>(value_) * 1e-3f;
+    }
+
+    std::strong_ordering
+    operator<=>(const Compliance& lhs, const Compliance& rhs) {
+        float xs = static_cast<float>(lhs);
+        float ys = static_cast<float>(rhs);
+
+        if (xs == ys) {
+            return std::strong_ordering::equal;
+        } else if (xs < ys) {
+            return std::strong_ordering::less;
+        } else {
+            return std::strong_ordering::greater;
+        }
+    }
+
+    bool
+    operator==(const Compliance& lhs, const Compliance& rhs) {
+        return (lhs <=> rhs) == std::strong_ordering::equal;
+    }
+
+    bool
+    operator!=(const Compliance& lhs, const Compliance& rhs) {
+        return (lhs <=> rhs) != std::strong_ordering::equal;
+    }
+
+    bool
+    operator<(const Compliance& lhs, const Compliance& rhs) {
+        return (lhs <=> rhs) == std::strong_ordering::less;
+    }
+
+    bool
+    operator<=(const Compliance& lhs, const Compliance& rhs) {
+        return (lhs <=> rhs) != std::strong_ordering::greater;
+    }
+
+    bool
+    operator>(const Compliance& lhs, const Compliance& rhs) {
+        return (lhs <=> rhs) == std::strong_ordering::greater;
+    }
+
+    bool
+    operator>=(const Compliance& lhs, const Compliance& rhs) {
+        return (lhs <=> rhs) != std::strong_ordering::less;
+    }
+
+    Compliance
+    operator*(const Compliance& flow, float scalar) {
+        if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
+        return Compliance(static_cast<float>(flow) * scalar);
+    }
+
+    Compliance
+    operator*(float scalar, const Compliance& flow) {
+        if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
+        return Compliance(static_cast<float>(flow) * scalar);
+    }
+
+    std::ostream&
+    operator<<(std::ostream& os, const Compliance& flow) {
+        return os << std::format("{:.1f}L/cmH2O", static_cast<float>(flow));
+    }
+
+    Elastance::Elastance() : value_(0) {}
+    Elastance::Elastance(float v) {
+        if (not std::isfinite(v)) {
+            throw std::domain_error("flow value must be finite");
+        } else {
+            value_ = static_cast<std::int32_t>(v * 1e+3f);
+        }
+    }
+
+    Elastance::Elastance(std::int32_t v) : value_(v) {}
+
+    Elastance::operator
+    float() const {
+        return static_cast<float>(value_) * 1e-3f;
+    }
+
+    std::strong_ordering
+    operator<=>(const Elastance& lhs, const Elastance& rhs) {
+        float xs = static_cast<float>(lhs);
+        float ys = static_cast<float>(rhs);
+
+        if (xs == ys) {
+            return std::strong_ordering::equal;
+        } else if (xs < ys) {
+            return std::strong_ordering::less;
+        } else {
+            return std::strong_ordering::greater;
+        }
+    }
+
+    bool
+    operator==(const Elastance& lhs, const Elastance& rhs) {
+        return (lhs <=> rhs) == std::strong_ordering::equal;
+    }
+
+    bool
+    operator!=(const Elastance& lhs, const Elastance& rhs) {
+        return (lhs <=> rhs) != std::strong_ordering::equal;
+    }
+
+    bool
+    operator<(const Elastance& lhs, const Elastance& rhs) {
+        return (lhs <=> rhs) == std::strong_ordering::less;
+    }
+
+    bool
+    operator<=(const Elastance& lhs, const Elastance& rhs) {
+        return (lhs <=> rhs) != std::strong_ordering::greater;
+    }
+
+    bool
+    operator>(const Elastance& lhs, const Elastance& rhs) {
+        return (lhs <=> rhs) == std::strong_ordering::greater;
+    }
+
+    bool
+    operator>=(const Elastance& lhs, const Elastance& rhs) {
+        return (lhs <=> rhs) != std::strong_ordering::less;
+    }
+
+    Elastance
+    operator*(const Elastance& flow, float scalar) {
+        if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
+        return Elastance(static_cast<float>(flow) * scalar);
+    }
+
+    Elastance
+    operator*(float scalar, const Elastance& flow) {
+        if (not std::isfinite(scalar)) { throw std::domain_error("scalar value must be finite"); }
+        return Elastance(static_cast<float>(flow) * scalar);
+    }
+
+    std::ostream&
+    operator<<(std::ostream& os, const Elastance& flow) {
+        return os << std::format("{:.1f}cmH2O/L", static_cast<float>(flow));
+    }
+
     Flow::Flow() : value_(0) {}
     Flow::Flow(float v) {
-        if (not std::isfinite(v)) { 
-            throw std::domain_error("flow value must be finite"); 
+        if (not std::isfinite(v)) {
+            throw std::domain_error("flow value must be finite");
         } else {
             value_ = static_cast<std::int32_t>(v * 1e+3f);
         }
@@ -65,6 +219,7 @@ namespace ventilation {
     operator+(const Flow& lhs, const Flow& rhs) {
         return Flow(lhs.value_ + rhs.value_);
     }
+
     Flow
     operator-(const Flow& lhs) {
         return Flow(-lhs.value_);
@@ -94,8 +249,8 @@ namespace ventilation {
 
     Pressure::Pressure() : value_(0) {}
     Pressure::Pressure(float v) {
-        if (not std::isfinite(v)) { 
-            throw std::domain_error("pressure value must be finite"); 
+        if (not std::isfinite(v)) {
+            throw std::domain_error("pressure value must be finite");
         } else {
             value_ = static_cast<std::int32_t>(v * 1e+3f);
         }
@@ -156,6 +311,7 @@ namespace ventilation {
     operator+(const Pressure& lhs, const Pressure& rhs) {
         return Pressure(lhs.value_ + rhs.value_);
     }
+
     Pressure
     operator-(const Pressure& lhs) {
         return Pressure(-lhs.value_);
@@ -185,8 +341,8 @@ namespace ventilation {
 
     Volume::Volume() : value_(0) {}
     Volume::Volume(float v) {
-        if (not std::isfinite(v)) { 
-            throw std::domain_error("volume value must be finite"); 
+        if (not std::isfinite(v)) {
+            throw std::domain_error("volume value must be finite");
         } else {
             value_ = static_cast<std::int32_t>(v * 1e+3f);
         }
@@ -247,6 +403,7 @@ namespace ventilation {
     operator+(const Volume& lhs, const Volume& rhs) {
         return Volume(lhs.value_ + rhs.value_);
     }
+
     Volume
     operator-(const Volume& lhs) {
         return Volume(-lhs.value_);

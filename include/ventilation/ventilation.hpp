@@ -7,6 +7,89 @@
 #include <format>
 
 namespace ventilation {
+    // Forward declaration
+    class Compliance;
+    class Elastance;
+    class Flow;
+    class Pressure;
+    class Volume;
+
+    class Compliance {
+        public:
+            Compliance();
+            explicit Compliance(float v);
+            explicit operator float() const;
+
+            friend bool
+            operator==(const Compliance& lhs, const Compliance& rhs);
+
+            friend bool
+            operator!=(const Compliance& lhs, const Compliance& rhs);
+
+            friend bool
+            operator<(const Compliance& lhs, const Compliance& rhs);
+
+            friend bool
+            operator<=(const Compliance& lhs, const Compliance& rhs);
+
+            friend bool
+            operator>(const Compliance& lhs, const Compliance& rhs);
+
+            friend bool
+            operator>=(const Compliance& lhs, const Compliance& rhs);
+
+            friend Compliance
+            operator*(const Compliance& flow, float scalar);
+
+            friend Compliance
+            operator*(float scalar, const Compliance& flow);
+
+            friend std::ostream&
+            operator<<(std::ostream& os, const Compliance& flow);
+        private:
+            Compliance(std::int32_t v);
+
+            std::int32_t value_;
+    };
+
+    class Elastance {
+        public:
+            Elastance();
+            explicit Elastance(float v);
+            explicit operator float() const;
+
+            friend bool
+            operator==(const Elastance& lhs, const Elastance& rhs);
+
+            friend bool
+            operator!=(const Elastance& lhs, const Elastance& rhs);
+
+            friend bool
+            operator<(const Elastance& lhs, const Elastance& rhs);
+
+            friend bool
+            operator<=(const Elastance& lhs, const Elastance& rhs);
+
+            friend bool
+            operator>(const Elastance& lhs, const Elastance& rhs);
+
+            friend bool
+            operator>=(const Elastance& lhs, const Elastance& rhs);
+
+            friend Elastance
+            operator*(const Elastance& flow, float scalar);
+
+            friend Elastance
+            operator*(float scalar, const Elastance& flow);
+
+            friend std::ostream&
+            operator<<(std::ostream& os, const Elastance& flow);
+        private:
+            Elastance(std::int32_t v);
+
+            std::int32_t value_;
+    };
+
     class Flow {
         public:
             Flow();
